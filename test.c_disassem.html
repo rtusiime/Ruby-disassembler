@@ -20,8 +20,6 @@
  </br>
 <br> int main(void) {
  </br>
-<br> 
- </br>
 <br>   printf("Hello World\n");
  </br>
 <br>   return 0;
@@ -33,17 +31,9 @@
 <div class="column" style="background-color:#bbb;">
  <h2> Assembly </h2>
 <p>
-<br> 
- </br>
 <br> test:     file format elf64-x86-64
  </br>
-<br> 
- </br>
-<br> 
- </br>
 <br> Disassembly of section .init:
- </br>
-<br> 
  </br>
 <br> 0000000000401000 <_init>:
  </br>
@@ -63,11 +53,7 @@
  </br>
 <br>   40101a:	c3                   	ret    
  </br>
-<br> 
- </br>
 <br> Disassembly of section .plt:
- </br>
-<br> 
  </br>
 <br> 0000000000401020 <puts@plt-0x10>:
  </br>
@@ -77,8 +63,6 @@
  </br>
 <br>   40102c:	0f 1f 40 00          	nopl   0x0(%rax)
  </br>
-<br> 
- </br>
 <br> 0000000000401030 <puts@plt>:
  </br>
 <br>   401030:	ff 25 e2 2f 00 00    	jmp    *0x2fe2(%rip)        # 404018 <puts@GLIBC_2.2.5>
@@ -87,11 +71,7 @@
  </br>
 <br>   40103b:	e9 e0 ff ff ff       	jmp    401020 <_init+0x20>
  </br>
-<br> 
- </br>
 <br> Disassembly of section .text:
- </br>
-<br> 
  </br>
 <br> 0000000000401040 <_start>:
  </br>
@@ -121,23 +101,17 @@
  </br>
 <br>   401065:	f4                   	hlt    
  </br>
-<br> 
- </br>
 <br> 0000000000401066 <.annobin_abi_note.c>:
  </br>
 <br>   401066:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
  </br>
 <br>   40106d:	00 00 00 
  </br>
-<br> 
- </br>
 <br> 0000000000401070 <_dl_relocate_static_pie>:
  </br>
 <br>   401070:	f3 0f 1e fa          	endbr64 
  </br>
 <br>   401074:	c3                   	ret    
- </br>
-<br> 
  </br>
 <br> 0000000000401075 <.annobin__dl_relocate_static_pie.end>:
  </br>
@@ -146,8 +120,6 @@
 <br>   40107c:	00 00 00 
  </br>
 <br>   40107f:	90                   	nop
- </br>
-<br> 
  </br>
 <br> 0000000000401080 <deregister_tm_clones>:
  </br>
@@ -176,8 +148,6 @@
 <br>   4010a8:	00 00 00 00 
  </br>
 <br>   4010ac:	0f 1f 40 00          	nopl   0x0(%rax)
- </br>
-<br> 
  </br>
 <br> 00000000004010b0 <register_tm_clones>:
  </br>
@@ -215,8 +185,6 @@
  </br>
 <br>   4010ec:	0f 1f 40 00          	nopl   0x0(%rax)
  </br>
-<br> 
- </br>
 <br> 00000000004010f0 <__do_global_dtors_aux>:
  </br>
 <br>   4010f0:	f3 0f 1e fa          	endbr64 
@@ -247,15 +215,11 @@
  </br>
 <br>   40111c:	0f 1f 40 00          	nopl   0x0(%rax)
  </br>
-<br> 
- </br>
 <br> 0000000000401120 <frame_dummy>:
  </br>
 <br>   401120:	f3 0f 1e fa          	endbr64 
  </br>
 <br>   401124:	eb 8a                	jmp    4010b0 <register_tm_clones>
- </br>
-<br> 
  </br>
 <br> 0000000000401126 <main>:
  </br>
@@ -271,11 +235,7 @@
  </br>
 <br>   40113d:	c3                   	ret    
  </br>
-<br> 
- </br>
 <br> Disassembly of section .fini:
- </br>
-<br> 
  </br>
 <br> 0000000000401140 <_fini>:
  </br>
