@@ -3,7 +3,7 @@ llvmDump = `llvm-dwarfdump --debug-line 'test'`
 puts llvmDump
 objDump  = `objdump -d 'test'`
 puts objDump
-fileHtml = File.new("#{ARGV[0]}_disassem.html", "w+")
+fileHtml = File.new("disassem.html", "w+")
 fileHtml.puts "<HTML>"
 fileHtml.puts "<HEAD>"
 fileHtml.puts "<style media='all' type='text/css'>"
