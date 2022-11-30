@@ -1,8 +1,6 @@
 wasGood = system( "gcc -g3 -O1 -o 'test' #{ARGV[0]} " )
-llvmDump = `llvm-dwarfdump --debug-line 'test'`
-puts llvmDump
-objDump  = `objdump -d 'test'`
-puts objDump
+llvmDump = system("llvm-dwarfdump --debug-line 'test' > llvmDump.txt" )
+objDump  = system("objdump -d 'test' >  objDump.txt")
 file = File.new("#{ARGV[0]}_disassem.html", "w+")
 file.puts "<!DOCTYPE html>"
 file.puts "<html>"
@@ -27,7 +25,11 @@ file.puts "</p>"
 file.puts "</div>"
 file.puts "<div class=\"column\" style=\"background-color:#bbb;\">"
 file.puts " <h2> Assembly </h2>"
-file.puts " <p> #{objDump} </p>"
+file.puts "<p>"
+File.open("objDump.txt").each do |line|
+file.puts "<br> #{line} </br>"
+end
+file.puts "</p>"
 file.puts " </div>"
 file.puts "</BODY></HTML>"
 file.close()

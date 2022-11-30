@@ -1,0 +1,219 @@
+test:	file format elf64-x86-64
+
+.debug_line contents:
+debug_line[0x00000000]
+Line table prologue:
+    total_length: 0x0000017d
+          format: DWARF32
+         version: 5
+    address_size: 8
+ seg_select_size: 0
+ prologue_length: 0x0000015a
+ min_inst_length: 1
+max_ops_per_inst: 1
+ default_is_stmt: 1
+       line_base: -5
+      line_range: 14
+     opcode_base: 13
+standard_opcode_lengths[DW_LNS_copy] = 0
+standard_opcode_lengths[DW_LNS_advance_pc] = 1
+standard_opcode_lengths[DW_LNS_advance_line] = 1
+standard_opcode_lengths[DW_LNS_set_file] = 1
+standard_opcode_lengths[DW_LNS_set_column] = 1
+standard_opcode_lengths[DW_LNS_negate_stmt] = 0
+standard_opcode_lengths[DW_LNS_set_basic_block] = 0
+standard_opcode_lengths[DW_LNS_const_add_pc] = 0
+standard_opcode_lengths[DW_LNS_fixed_advance_pc] = 1
+standard_opcode_lengths[DW_LNS_set_prologue_end] = 0
+standard_opcode_lengths[DW_LNS_set_epilogue_begin] = 0
+standard_opcode_lengths[DW_LNS_set_isa] = 1
+include_directories[  0] = "/u/rtusiime/CSC254/CSC254HW5"
+include_directories[  1] = "/usr/include"
+include_directories[  2] = "/usr/include/bits"
+include_directories[  3] = "/usr/include/sys"
+include_directories[  4] = "/usr/include/gnu"
+include_directories[  5] = "/usr/lib/gcc/x86_64-redhat-linux/12/include"
+include_directories[  6] = "/usr/include/bits/types"
+file_names[  0]:
+           name: "test.c"
+      dir_index: 0
+file_names[  1]:
+           name: "test.c"
+      dir_index: 0
+file_names[  2]:
+           name: "<built-in>"
+      dir_index: 0
+file_names[  3]:
+           name: "stdc-predef.h"
+      dir_index: 1
+file_names[  4]:
+           name: "stdio.h"
+      dir_index: 1
+file_names[  5]:
+           name: "libc-header-start.h"
+      dir_index: 2
+file_names[  6]:
+           name: "features.h"
+      dir_index: 1
+file_names[  7]:
+           name: "features-time64.h"
+      dir_index: 1
+file_names[  8]:
+           name: "wordsize.h"
+      dir_index: 2
+file_names[  9]:
+           name: "timesize.h"
+      dir_index: 2
+file_names[ 10]:
+           name: "cdefs.h"
+      dir_index: 3
+file_names[ 11]:
+           name: "long-double.h"
+      dir_index: 2
+file_names[ 12]:
+           name: "stubs.h"
+      dir_index: 4
+file_names[ 13]:
+           name: "stubs-64.h"
+      dir_index: 4
+file_names[ 14]:
+           name: "stddef.h"
+      dir_index: 5
+file_names[ 15]:
+           name: "stdarg.h"
+      dir_index: 5
+file_names[ 16]:
+           name: "types.h"
+      dir_index: 2
+file_names[ 17]:
+           name: "typesizes.h"
+      dir_index: 2
+file_names[ 18]:
+           name: "time64.h"
+      dir_index: 2
+file_names[ 19]:
+           name: "__fpos_t.h"
+      dir_index: 6
+file_names[ 20]:
+           name: "__mbstate_t.h"
+      dir_index: 6
+file_names[ 21]:
+           name: "__fpos64_t.h"
+      dir_index: 6
+file_names[ 22]:
+           name: "__FILE.h"
+      dir_index: 6
+file_names[ 23]:
+           name: "FILE.h"
+      dir_index: 6
+file_names[ 24]:
+           name: "struct_FILE.h"
+      dir_index: 6
+file_names[ 25]:
+           name: "stdio_lim.h"
+      dir_index: 2
+file_names[ 26]:
+           name: "floatn.h"
+      dir_index: 2
+file_names[ 27]:
+           name: "floatn-common.h"
+      dir_index: 2
+file_names[ 28]:
+           name: "stdio.h"
+      dir_index: 2
+file_names[ 29]:
+           name: "stdlib.h"
+      dir_index: 1
+file_names[ 30]:
+           name: "waitflags.h"
+      dir_index: 2
+file_names[ 31]:
+           name: "waitstatus.h"
+      dir_index: 2
+file_names[ 32]:
+           name: "types.h"
+      dir_index: 3
+file_names[ 33]:
+           name: "clock_t.h"
+      dir_index: 6
+file_names[ 34]:
+           name: "clockid_t.h"
+      dir_index: 6
+file_names[ 35]:
+           name: "time_t.h"
+      dir_index: 6
+file_names[ 36]:
+           name: "timer_t.h"
+      dir_index: 6
+file_names[ 37]:
+           name: "stdint-intn.h"
+      dir_index: 2
+file_names[ 38]:
+           name: "endian.h"
+      dir_index: 1
+file_names[ 39]:
+           name: "endian.h"
+      dir_index: 2
+file_names[ 40]:
+           name: "endianness.h"
+      dir_index: 2
+file_names[ 41]:
+           name: "byteswap.h"
+      dir_index: 2
+file_names[ 42]:
+           name: "uintn-identity.h"
+      dir_index: 2
+file_names[ 43]:
+           name: "select.h"
+      dir_index: 3
+file_names[ 44]:
+           name: "select.h"
+      dir_index: 2
+file_names[ 45]:
+           name: "sigset_t.h"
+      dir_index: 6
+file_names[ 46]:
+           name: "__sigset_t.h"
+      dir_index: 6
+file_names[ 47]:
+           name: "struct_timeval.h"
+      dir_index: 6
+file_names[ 48]:
+           name: "struct_timespec.h"
+      dir_index: 6
+file_names[ 49]:
+           name: "pthreadtypes.h"
+      dir_index: 2
+file_names[ 50]:
+           name: "thread-shared-types.h"
+      dir_index: 2
+file_names[ 51]:
+           name: "pthreadtypes-arch.h"
+      dir_index: 2
+file_names[ 52]:
+           name: "atomic_wide_counter.h"
+      dir_index: 2
+file_names[ 53]:
+           name: "struct_mutex.h"
+      dir_index: 2
+file_names[ 54]:
+           name: "struct_rwlock.h"
+      dir_index: 2
+file_names[ 55]:
+           name: "alloca.h"
+      dir_index: 1
+file_names[ 56]:
+           name: "stdlib-bsearch.h"
+      dir_index: 2
+file_names[ 57]:
+           name: "stdlib-float.h"
+      dir_index: 2
+
+Address            Line   Column File   ISA Discriminator Flags
+------------------ ------ ------ ------ --- ------------- -------------
+0x0000000000401126      3     16      1   0             0  is_stmt
+0x000000000040112a      5      3      1   0             0  is_stmt
+0x0000000000401134      6      3      1   0             0  is_stmt
+0x0000000000401134      7      1      1   0             0 
+0x000000000040113e      7      1      1   0             0  end_sequence
+
