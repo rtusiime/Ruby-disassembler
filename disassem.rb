@@ -18,8 +18,8 @@ file.puts "<div class=\"row\">"
 file.puts " <div class=\"column\" style=\"background-color:#aaa;\">"
 file.puts "<h2>Source</h2>"
 file.puts "<p>"
-File.open(ARGV[0]).each do |line| 
-file.puts "<br> #{line} </br>"
+File.open(ARGV[0]).each do |line|
+file.puts "<br> #{line} </br>" if line != ""
 end
 file.puts "</p>"
 file.puts "</div>"
@@ -27,7 +27,7 @@ file.puts "<div class=\"column\" style=\"background-color:#bbb;\">"
 file.puts " <h2> Assembly </h2>"
 file.puts "<p>"
 File.open("objDump.txt").each do |line|
-file.puts "<br> #{line} </br>"
+file.puts "<br> #{line} </br>" if line != ""
 end
 file.puts "</p>"
 file.puts " </div>"
