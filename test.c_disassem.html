@@ -1,0 +1,362 @@
+<HTML>
+<HEAD>
+<style media='all' type='text/css'>
+body {font-family: Helvetica Neue, sans-serif; font-size: 18px; color: #525252; padding: 0; margin: 0;background: #f2f2f2;}
+.content {max-width:1180px; padding: 40px;}
+.div1 {margin-top: 28px; margin-bottom: 1px; background-color: #fff; padding: 10px 40px; padding-bottom: 8px; }
+.div2 {margin-top: 2px; height:25%; margin-bottom: 28px; background-color: #fff; padding: 10px 40px; padding-bottom: 8px; }
+.header {background-color: white; height: 16%; min-height: 110px; position: relative; width: 100%; -webkit-user-select: none;}
+.secondSection {background-color: #e8e8e8; height: 16%; min-height: 110px; position: relative; width: 100%; -webkit-user-select: none;}
+.pass {color: #ffffff; background: #34d9a2; padding: 10px 20px 10px 20px; text-decoration: none; width:50px;}
+.fail {color: #ffffff; background: #f25e6a; padding: 10px 20px 10px 20px; text-decoration: none; width:50px;}
+</style>
+</HEAD>
+<BODY>
+<DIV class='secondSection'><p>
+test:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+0000000000401000 <_init>:
+  401000:	f3 0f 1e fa          	endbr64 
+  401004:	48 83 ec 08          	sub    $0x8,%rsp
+  401008:	48 8b 05 e9 2f 00 00 	mov    0x2fe9(%rip),%rax        # 403ff8 <__gmon_start__@Base>
+  40100f:	48 85 c0             	test   %rax,%rax
+  401012:	74 02                	je     401016 <_init+0x16>
+  401014:	ff d0                	call   *%rax
+  401016:	48 83 c4 08          	add    $0x8,%rsp
+  40101a:	c3                   	ret    
+
+Disassembly of section .plt:
+
+0000000000401020 <puts@plt-0x10>:
+  401020:	ff 35 e2 2f 00 00    	push   0x2fe2(%rip)        # 404008 <_GLOBAL_OFFSET_TABLE_+0x8>
+  401026:	ff 25 e4 2f 00 00    	jmp    *0x2fe4(%rip)        # 404010 <_GLOBAL_OFFSET_TABLE_+0x10>
+  40102c:	0f 1f 40 00          	nopl   0x0(%rax)
+
+0000000000401030 <puts@plt>:
+  401030:	ff 25 e2 2f 00 00    	jmp    *0x2fe2(%rip)        # 404018 <puts@GLIBC_2.2.5>
+  401036:	68 00 00 00 00       	push   $0x0
+  40103b:	e9 e0 ff ff ff       	jmp    401020 <_init+0x20>
+
+Disassembly of section .text:
+
+0000000000401040 <_start>:
+  401040:	f3 0f 1e fa          	endbr64 
+  401044:	31 ed                	xor    %ebp,%ebp
+  401046:	49 89 d1             	mov    %rdx,%r9
+  401049:	5e                   	pop    %rsi
+  40104a:	48 89 e2             	mov    %rsp,%rdx
+  40104d:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp
+  401051:	50                   	push   %rax
+  401052:	54                   	push   %rsp
+  401053:	45 31 c0             	xor    %r8d,%r8d
+  401056:	31 c9                	xor    %ecx,%ecx
+  401058:	48 c7 c7 26 11 40 00 	mov    $0x401126,%rdi
+  40105f:	ff 15 8b 2f 00 00    	call   *0x2f8b(%rip)        # 403ff0 <__libc_start_main@GLIBC_2.34>
+  401065:	f4                   	hlt    
+
+0000000000401066 <.annobin_abi_note.c>:
+  401066:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
+  40106d:	00 00 00 
+
+0000000000401070 <_dl_relocate_static_pie>:
+  401070:	f3 0f 1e fa          	endbr64 
+  401074:	c3                   	ret    
+
+0000000000401075 <.annobin__dl_relocate_static_pie.end>:
+  401075:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
+  40107c:	00 00 00 
+  40107f:	90                   	nop
+
+0000000000401080 <deregister_tm_clones>:
+  401080:	b8 28 40 40 00       	mov    $0x404028,%eax
+  401085:	48 3d 28 40 40 00    	cmp    $0x404028,%rax
+  40108b:	74 13                	je     4010a0 <deregister_tm_clones+0x20>
+  40108d:	b8 00 00 00 00       	mov    $0x0,%eax
+  401092:	48 85 c0             	test   %rax,%rax
+  401095:	74 09                	je     4010a0 <deregister_tm_clones+0x20>
+  401097:	bf 28 40 40 00       	mov    $0x404028,%edi
+  40109c:	ff e0                	jmp    *%rax
+  40109e:	66 90                	xchg   %ax,%ax
+  4010a0:	c3                   	ret    
+  4010a1:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+  4010a8:	00 00 00 00 
+  4010ac:	0f 1f 40 00          	nopl   0x0(%rax)
+
+00000000004010b0 <register_tm_clones>:
+  4010b0:	be 28 40 40 00       	mov    $0x404028,%esi
+  4010b5:	48 81 ee 28 40 40 00 	sub    $0x404028,%rsi
+  4010bc:	48 89 f0             	mov    %rsi,%rax
+  4010bf:	48 c1 ee 3f          	shr    $0x3f,%rsi
+  4010c3:	48 c1 f8 03          	sar    $0x3,%rax
+  4010c7:	48 01 c6             	add    %rax,%rsi
+  4010ca:	48 d1 fe             	sar    %rsi
+  4010cd:	74 11                	je     4010e0 <register_tm_clones+0x30>
+  4010cf:	b8 00 00 00 00       	mov    $0x0,%eax
+  4010d4:	48 85 c0             	test   %rax,%rax
+  4010d7:	74 07                	je     4010e0 <register_tm_clones+0x30>
+  4010d9:	bf 28 40 40 00       	mov    $0x404028,%edi
+  4010de:	ff e0                	jmp    *%rax
+  4010e0:	c3                   	ret    
+  4010e1:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+  4010e8:	00 00 00 00 
+  4010ec:	0f 1f 40 00          	nopl   0x0(%rax)
+
+00000000004010f0 <__do_global_dtors_aux>:
+  4010f0:	f3 0f 1e fa          	endbr64 
+  4010f4:	80 3d 29 2f 00 00 00 	cmpb   $0x0,0x2f29(%rip)        # 404024 <completed.0>
+  4010fb:	75 13                	jne    401110 <__do_global_dtors_aux+0x20>
+  4010fd:	55                   	push   %rbp
+  4010fe:	48 89 e5             	mov    %rsp,%rbp
+  401101:	e8 7a ff ff ff       	call   401080 <deregister_tm_clones>
+  401106:	c6 05 17 2f 00 00 01 	movb   $0x1,0x2f17(%rip)        # 404024 <completed.0>
+  40110d:	5d                   	pop    %rbp
+  40110e:	c3                   	ret    
+  40110f:	90                   	nop
+  401110:	c3                   	ret    
+  401111:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+  401118:	00 00 00 00 
+  40111c:	0f 1f 40 00          	nopl   0x0(%rax)
+
+0000000000401120 <frame_dummy>:
+  401120:	f3 0f 1e fa          	endbr64 
+  401124:	eb 8a                	jmp    4010b0 <register_tm_clones>
+
+0000000000401126 <main>:
+  401126:	48 83 ec 08          	sub    $0x8,%rsp
+  40112a:	bf 10 20 40 00       	mov    $0x402010,%edi
+  40112f:	e8 fc fe ff ff       	call   401030 <puts@plt>
+  401134:	b8 00 00 00 00       	mov    $0x0,%eax
+  401139:	48 83 c4 08          	add    $0x8,%rsp
+  40113d:	c3                   	ret    
+
+Disassembly of section .fini:
+
+0000000000401140 <_fini>:
+  401140:	f3 0f 1e fa          	endbr64 
+  401144:	48 83 ec 08          	sub    $0x8,%rsp
+  401148:	48 83 c4 08          	add    $0x8,%rsp
+  40114c:	c3                   	ret    
+</p><p>test:	file format elf64-x86-64
+
+.debug_line contents:
+debug_line[0x00000000]
+Line table prologue:
+    total_length: 0x0000017d
+          format: DWARF32
+         version: 5
+    address_size: 8
+ seg_select_size: 0
+ prologue_length: 0x0000015a
+ min_inst_length: 1
+max_ops_per_inst: 1
+ default_is_stmt: 1
+       line_base: -5
+      line_range: 14
+     opcode_base: 13
+standard_opcode_lengths[DW_LNS_copy] = 0
+standard_opcode_lengths[DW_LNS_advance_pc] = 1
+standard_opcode_lengths[DW_LNS_advance_line] = 1
+standard_opcode_lengths[DW_LNS_set_file] = 1
+standard_opcode_lengths[DW_LNS_set_column] = 1
+standard_opcode_lengths[DW_LNS_negate_stmt] = 0
+standard_opcode_lengths[DW_LNS_set_basic_block] = 0
+standard_opcode_lengths[DW_LNS_const_add_pc] = 0
+standard_opcode_lengths[DW_LNS_fixed_advance_pc] = 1
+standard_opcode_lengths[DW_LNS_set_prologue_end] = 0
+standard_opcode_lengths[DW_LNS_set_epilogue_begin] = 0
+standard_opcode_lengths[DW_LNS_set_isa] = 1
+include_directories[  0] = "/u/rtusiime/CSC254/CSC254HW5"
+include_directories[  1] = "/usr/include"
+include_directories[  2] = "/usr/include/bits"
+include_directories[  3] = "/usr/include/sys"
+include_directories[  4] = "/usr/include/gnu"
+include_directories[  5] = "/usr/lib/gcc/x86_64-redhat-linux/12/include"
+include_directories[  6] = "/usr/include/bits/types"
+file_names[  0]:
+           name: "test.c"
+      dir_index: 0
+file_names[  1]:
+           name: "test.c"
+      dir_index: 0
+file_names[  2]:
+           name: "<built-in>"
+      dir_index: 0
+file_names[  3]:
+           name: "stdc-predef.h"
+      dir_index: 1
+file_names[  4]:
+           name: "stdio.h"
+      dir_index: 1
+file_names[  5]:
+           name: "libc-header-start.h"
+      dir_index: 2
+file_names[  6]:
+           name: "features.h"
+      dir_index: 1
+file_names[  7]:
+           name: "features-time64.h"
+      dir_index: 1
+file_names[  8]:
+           name: "wordsize.h"
+      dir_index: 2
+file_names[  9]:
+           name: "timesize.h"
+      dir_index: 2
+file_names[ 10]:
+           name: "cdefs.h"
+      dir_index: 3
+file_names[ 11]:
+           name: "long-double.h"
+      dir_index: 2
+file_names[ 12]:
+           name: "stubs.h"
+      dir_index: 4
+file_names[ 13]:
+           name: "stubs-64.h"
+      dir_index: 4
+file_names[ 14]:
+           name: "stddef.h"
+      dir_index: 5
+file_names[ 15]:
+           name: "stdarg.h"
+      dir_index: 5
+file_names[ 16]:
+           name: "types.h"
+      dir_index: 2
+file_names[ 17]:
+           name: "typesizes.h"
+      dir_index: 2
+file_names[ 18]:
+           name: "time64.h"
+      dir_index: 2
+file_names[ 19]:
+           name: "__fpos_t.h"
+      dir_index: 6
+file_names[ 20]:
+           name: "__mbstate_t.h"
+      dir_index: 6
+file_names[ 21]:
+           name: "__fpos64_t.h"
+      dir_index: 6
+file_names[ 22]:
+           name: "__FILE.h"
+      dir_index: 6
+file_names[ 23]:
+           name: "FILE.h"
+      dir_index: 6
+file_names[ 24]:
+           name: "struct_FILE.h"
+      dir_index: 6
+file_names[ 25]:
+           name: "stdio_lim.h"
+      dir_index: 2
+file_names[ 26]:
+           name: "floatn.h"
+      dir_index: 2
+file_names[ 27]:
+           name: "floatn-common.h"
+      dir_index: 2
+file_names[ 28]:
+           name: "stdio.h"
+      dir_index: 2
+file_names[ 29]:
+           name: "stdlib.h"
+      dir_index: 1
+file_names[ 30]:
+           name: "waitflags.h"
+      dir_index: 2
+file_names[ 31]:
+           name: "waitstatus.h"
+      dir_index: 2
+file_names[ 32]:
+           name: "types.h"
+      dir_index: 3
+file_names[ 33]:
+           name: "clock_t.h"
+      dir_index: 6
+file_names[ 34]:
+           name: "clockid_t.h"
+      dir_index: 6
+file_names[ 35]:
+           name: "time_t.h"
+      dir_index: 6
+file_names[ 36]:
+           name: "timer_t.h"
+      dir_index: 6
+file_names[ 37]:
+           name: "stdint-intn.h"
+      dir_index: 2
+file_names[ 38]:
+           name: "endian.h"
+      dir_index: 1
+file_names[ 39]:
+           name: "endian.h"
+      dir_index: 2
+file_names[ 40]:
+           name: "endianness.h"
+      dir_index: 2
+file_names[ 41]:
+           name: "byteswap.h"
+      dir_index: 2
+file_names[ 42]:
+           name: "uintn-identity.h"
+      dir_index: 2
+file_names[ 43]:
+           name: "select.h"
+      dir_index: 3
+file_names[ 44]:
+           name: "select.h"
+      dir_index: 2
+file_names[ 45]:
+           name: "sigset_t.h"
+      dir_index: 6
+file_names[ 46]:
+           name: "__sigset_t.h"
+      dir_index: 6
+file_names[ 47]:
+           name: "struct_timeval.h"
+      dir_index: 6
+file_names[ 48]:
+           name: "struct_timespec.h"
+      dir_index: 6
+file_names[ 49]:
+           name: "pthreadtypes.h"
+      dir_index: 2
+file_names[ 50]:
+           name: "thread-shared-types.h"
+      dir_index: 2
+file_names[ 51]:
+           name: "pthreadtypes-arch.h"
+      dir_index: 2
+file_names[ 52]:
+           name: "atomic_wide_counter.h"
+      dir_index: 2
+file_names[ 53]:
+           name: "struct_mutex.h"
+      dir_index: 2
+file_names[ 54]:
+           name: "struct_rwlock.h"
+      dir_index: 2
+file_names[ 55]:
+           name: "alloca.h"
+      dir_index: 1
+file_names[ 56]:
+           name: "stdlib-bsearch.h"
+      dir_index: 2
+file_names[ 57]:
+           name: "stdlib-float.h"
+      dir_index: 2
+
+Address            Line   Column File   ISA Discriminator Flags
+------------------ ------ ------ ------ --- ------------- -------------
+0x0000000000401126      3     16      1   0             0  is_stmt
+0x000000000040112a      5      3      1   0             0  is_stmt
+0x0000000000401134      6      3      1   0             0  is_stmt
+0x0000000000401134      7      1      1   0             0 
+0x000000000040113e      7      1      1   0             0  end_sequence
+
+</p></div>
+</BODY></HTML>
