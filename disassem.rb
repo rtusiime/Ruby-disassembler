@@ -3,22 +3,29 @@ llvmDump = `llvm-dwarfdump --debug-line 'test'`
 puts llvmDump
 objDump  = `objdump -d 'test'`
 puts objDump
-fileHtml = File.new("disassem.html", "w+")
-fileHtml.puts "<HTML>"
-fileHtml.puts "<HEAD>"
-fileHtml.puts "<style media='all' type='text/css'>"
-fileHtml.puts "body {font-family: Helvetica Neue, sans-serif; font-size: 18px; color: #525252; padding: 0; margin: 0;background: #f2f2f2;}"
-fileHtml.puts ".content {max-width:1180px; padding: 40px;}"
-fileHtml.puts ".div1 {margin-top: 28px; margin-bottom: 1px; background-color: #fff; padding: 10px 40px; padding-bottom: 8px; }"
-fileHtml.puts ".div2 {margin-top: 2px; height:25%; margin-bottom: 28px; background-color: #fff; padding: 10px 40px; padding-bottom: 8px; }"
-fileHtml.puts ".header {background-color: white; height: 16%; min-height: 110px; position: relative; width: 100%; -webkit-user-select: none;}"
-fileHtml.puts ".secondSection {background-color: #e8e8e8; height: 16%; min-height: 110px; position: relative; width: 100%; -webkit-user-select: none;}"
-fileHtml.puts ".pass {color: #ffffff; background: #34d9a2; padding: 10px 20px 10px 20px; text-decoration: none; width:50px;}"
-fileHtml.puts ".fail {color: #ffffff; background: #f25e6a; padding: 10px 20px 10px 20px; text-decoration: none; width:50px;}"
-fileHtml.puts "</style>"
-fileHtml.puts "</HEAD>"
-fileHtml.puts "<BODY>"
-fileHtml.puts "<DIV class='secondSection'><p>#{objDump}</p><p>#{llvmDump}</p></div>"
-fileHtml.puts "</BODY></HTML>"
-fileHtml.close()
-
+file = File.new("#{ARGV[0]}_disassem.html", "w+")
+file.puts "<!DOCTYPE html>"
+file.puts "<HTML>"
+file.puts "<HEAD>"
+file.puts "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+file.puts "<style media='all' type='text/css'>"
+file.puts "{box-sizing: border-box;}"
+file.puts ".column {float: left; width: 50%; padding: 10px; height: 300px;}"
+file.puts ".row:after {content: ""; display: table; clear: both;}"
+file.puts "</style>"
+file.puts "</HEAD>"
+file.puts "<BODY>"
+file.puts "<h2>#{ARGV[0]}</h2>"
+file.puts "<div class=\"row\">"
+file.puts " <div class=\"column\" style=\"background-color:#aaa;\">"
+file.puts "<h2>Source</h2>"
+File.open(ARGV[0]).each do |line| 
+file.puts "<p> #{line} </p>"
+end
+file.puts "</div>"
+file.puts "<div class=\"column\" style=\"background-color:#bbb;\">"
+file.puts " <h2> Assembly </h2>"
+file.puts " <p> #{objDump} </p>"
+file.puts " </div>"
+file.puts "</BODY></HTML>"
+file.close()
