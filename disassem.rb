@@ -29,7 +29,7 @@ file.puts "<div class=\"column\" style=\"background-color:#bbb;\">"
 file.puts " <h2> Assembly </h2>"
 file.puts "<p>"
 objDump.each do |lines|
-file.puts " <br> #{objDump} </br>"
+file.puts " <br> #{lines} </br>"
 end
 file.puts "</p>"
 file.puts " </div>"
