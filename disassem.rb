@@ -27,11 +27,7 @@ file.puts "</p>"
 file.puts "</div>"
 file.puts "<div class=\"column\" style=\"background-color:#bbb;\">"
 file.puts " <h2> Assembly </h2>"
-file.puts "<p>"
-objDump.each do |lines|
-file.puts " <br> #{lines} </br>"
-end
-file.puts "</p>"
+file.puts " <p> #{objDump} </p>"
 file.puts " </div>"
 file.puts "</BODY></HTML>"
 file.close()
