@@ -8,9 +8,10 @@ llvmDump = system("llvm-dwarfdump --debug-line 'test' > #{dwarf_file}" )
 objDump  = system("objdump -d 'test' >  #{assem_file}")
 
 # parse dwarf table to obtain mapping 
-line2add = {}
-add2line = {}
+sline2add = {}
+add2sline = {}
 start_add = 0 
+end_add = 0
 File.foreach(dwarf_file) do |line|
     case line
     when /^0x(.)*/
@@ -18,31 +19,35 @@ File.foreach(dwarf_file) do |line|
         # puts "#{array[0]} #{array[1]}"
         add = array[0].to_i(base=16)
         line_num = array[1].to_i
+        # record the start and end add
         if (start_add==0)
             start_add = add
         end
+        end_add = add
         # puts "#{add} #{line_num}"
         # create source line num to address mapping
-        if (line2add.has_key?(line_num))
-            line2add[line_num].append(add)
+        if (sline2add.has_key?(line_num))
+            sline2add[line_num].append(add)
         else
-            line2add[line_num] = [add]
+            sline2add[line_num] = [add]
         end
         # create address mapping to source code num mapping
-        if (add2line.has_key?(add))
-            add2line[add].append(line_num)
+        if (add2sline.has_key?(add))
+            add2sline[add].append(line_num)
         else
-            add2line[add] = [line_num]
+            add2sline[add] = [line_num]
         end
-
         next
     end
 end
 
 # parse the objdump to fill out the omitted instructions
+aline2add = {}
+add2aline = {}
 previous_add = 0
 previous_line = 0
 reach = false
+assem_num = 1
 File.foreach(assem_file) do |line|
     case line
     when /(.)*:$/
@@ -59,43 +64,74 @@ File.foreach(assem_file) do |line|
                 if(current_add==start_add)
                     reach = true
                     previous_add = start_add
-                    previous_line = add2line[previous_add].last
+                    previous_line = add2sline[previous_add].last
+                    aline2add[assem_num] = start_add
+                    add2aline[start_add] = assem_num
+                    assem_num = assem_num + 1
                 end
                 next
             end
             # passed start address
             # puts "#{current_add.to_s(16)},#{previous_add.to_s(16)},#{previous_line}"
-            if (!add2line.has_key?(current_add))
-                if (add2line.has_key?(previous_add))
-                    add2line[current_add] = [previous_line]
-                    line2add[previous_line].append(current_add)
+            if (!add2sline.has_key?(current_add))
+                if (add2sline.has_key?(previous_add))
+                    add2sline[current_add] = [previous_line]
+                    sline2add[previous_line].append(current_add)
+                    aline2add[assem_num] = current_add
+                    add2aline[current_add] = assem_num
+                    assem_num = assem_num + 1
                 end
             end
             previous_add = current_add
-            previous_line = add2line[current_add].last
+            previous_line = add2sline[current_add].last
         end
     end
 end
 
 # remove duplicate
-line2add.each do |key,value|
-    line2add[key] = value.uniq
+sline2add.each do |key,value|
+    sline2add[key] = value.uniq
 end
-add2line.each do |key,value|
-    add2line[key] = value.uniq
+add2sline.each do |key,value|
+    add2sline[key] = value.uniq
 end
 
 # print the mapping
 puts "Line to Address Mapping"
-line2add.each do |key,value|
+sline2add.each do |key,value|
     value_hex = value.map{|x| x.to_s(16)}
     puts "#{key} => #{value_hex}"
 end
 
 puts "Address to Line Mapping"
-add2line.each do |key,value|
+add2sline.each do |key,value|
     puts "#{key.to_s(16)} => #{value}"
 end
+
+puts "Assembly line to address Mapping"
+aline2add.each do |key,value|
+    puts "#{key} => #{value.to_s(16)}"
+end
+
+puts "Address to Assembly Line Mapping"
+add2aline.each do |key,value|
+    puts "#{key.to_s(16)} => #{value}"
+end
+
+=begin
+For Kevin
+The six things you will need:
+
+sline2add - source code line to LIST of assembly address
+add2sline - assembly address to LIST of source code line 
+aline2add - assembly line to ONE assembly address
+add2aline - assembly address to ONE assembly line
+start_add - the address for the first assembly instruction
+end_add - the address for the last assembly instruction
+
+NOTE: 
+I store the address in decimal form, to convert it to hex string, use "add.to_s(16)"
+=end
 
 # write actual html code
 file = File.new("#{ARGV[0]}_disassem.html", "w+")
