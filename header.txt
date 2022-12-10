@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<!--
+    This is a sample of the sort of output your tool should produce.
+    It has been created (by hand) for the ascii.c test program.
+
+    (c) Michael L. Scott, 2022.
+    For use by students in CSC 2/454 at the University of Rochester,
+    during the Fall 2022 term.  All other use requires written permission
+    of the author.
+-->
+<style>
+button {
+    border: none;
+    margin: none;
+    font-family: "Courier New", "Courier", "monospace";
+    background-color: Azure;
+}
+button[onclick] {
+    background-color: LightCyan;
+}
+button[onclick]:hover {
+    background-color: PaleGreen;
+}
+#assembly {
+    height: 88vh;
+    overflow: auto;
+    font-family: "Courier New", "Courier", "monospace";
+    font-size: 80%;
+    white-space: pre
+}
+#source {
+    height: 88vh;
+    overflow: auto;
+    font-family: "Courier New", "Courier", "monospace";
+    font-size: 80%;
+    white-space: pre
+}
+table {
+    border-spacing: 0px;
+}
+td {
+    padding: 0px;
+    padding-right: 15px;
+}
+</style>
+
+<body>
+<script>
+// scroll line into the middle of its respective subwindow
+function reveal(line) {
+  const element = document.getElementById(line);
+  element.scrollIntoView({
+    behavior: 'auto',
+    block: 'center',
+    inline: 'center'
+  });
+}
+// green-highlight aline,
+// yellow-highlight all source lines that contributed to aline,
+// and scroll sline into view
+function aclick(aline, sline) {
+  const sLines = document.querySelectorAll("span[aline]");  // slines have an aline list
+  const aLines = document.querySelectorAll("span[sline]");  // alines have an sline list
+  // clear all assembly lines
+  aLines.forEach((l) => {
+    l.style.backgroundColor = 'white';
+  })
+  sLines.forEach((sl) => {
+    if (sl.matches("span[aline~="+aline+"]")) {
+        sl.style.backgroundColor = 'yellow';
+        aLines.forEach((al) => {
+          if (al.matches("span[sline~="+sl.id+"]")) {
+            al.style.backgroundColor = 'PapayaWhip';
+          }
+        })
+    } else {
+        sl.style.backgroundColor = 'white';
+    }
+  })
+  const l = document.getElementById(aline);
+  l.style.backgroundColor = 'PaleGreen';
+  reveal(sline);
+}
+// green-highlight sline,
+// yellow-highlight all assembly lines that correspond to sline,
+// and scroll aline into view
+function sclick(sline, aline) {
+  const aLines = document.querySelectorAll("span[sline]");  // alines have an sline list
+  const sLines = document.querySelectorAll("span[aline]");  // slines have an aline list
+  // clear all source lines
+  sLines.forEach((l) => {
+    l.style.backgroundColor = 'white';
+  })
+  aLines.forEach((l) => {
+    if (l.matches("span[sline~="+sline+"]")) {
+        l.style.backgroundColor = 'yellow';
+    } else {
+        l.style.backgroundColor = 'white';
+    }
+  })
+  const l = document.getElementById(sline);
+  l.style.backgroundColor = 'PaleGreen';
+  reveal(aline);
+}
+</script>
+
+<h1>ascii</h1>
+
+<table width="100%">
+<tr>
+<td width="49%">
+<h2>source</h2>
+<!--
+    In each span of the following division, the id indicates the line number, which is
+    used to identify the line for scrollIntoView.  The aline attribute lists the assembly
+    line(s) associated with the source line -- the ones that should, if clicked, cause
+    this source line to highlight.
+
+    Each call of sclick(s, a) is passed two arguments.  The initial argument indicates
+    which source line this is -- it will cause any assembly line(s) associated with
+    that source line to be highlighted.  The second argument is the lowest-numbered
+    assembly line associated with that source line; this line will be scrolled into view
+    in the assembly pane.
+-->
