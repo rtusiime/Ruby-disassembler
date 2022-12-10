@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style> *
+{box-sizing: border-box;}
+.column {float: left; width: 50%; padding: 10px; }
+.row:after {content: ""; display: table; clear: both;}
+</style>
+</head>
+<body>
+<h2>ascii.c</h2>
+<div class="row">
+ <div class="column" style="background-color:#aaa;">
+<h2>Source</h2>
+<p>
+<br> /* This program gives information about an ascii code.
+ </br>
+<br> ** Its arguments are taken as octal, hex, or decimal numbers
+ </br>
+<br> ** and it prints information about the character.
+ </br>
+<br> ** With an argument of -, all values are printed.
+ </br>
+<br> ** With no argument, ascii expects characters from the keyboard.
+ </br>
+<br> ** To exit, push the same key three times in a row.
+ </br>
+<br> */
+ </br>
+<br> #include <stdlib.h>
+ </br>
+<br> #include <stdio.h>
+ </br>
+<br> #include <termios.h>
+ </br>
+<br> #include <unistd.h>
+ </br>
+<br> #include <ctype.h>
+ </br>
+<br> char *value[] = {
+ </br>
+<br>     "nul   ^@", "soh   ^A", "stx   ^B", "etx   ^C", "eot   ^D", "enq   ^E", "ack   ^F", "bel   ^G",
+ </br>
+<br>     "bs    ^H", "ht    ^I", "nl    ^J", "vt    ^K", "np    ^L", "cr    ^M", "so    ^N", "si    ^O",
+ </br>
+<br>     "dle   ^P", "dc1   ^Q", "dc2   ^R", "dc3   ^S", "dc4   ^T", "nak   ^U", "syn   ^V", "etb   ^W",
+ </br>
+<br>     "can   ^X", "em    ^Y", "sub   ^Z", "esc   ^[",
+ </br>
+<br>                 "fs    ^\\  ^shL", "gs    ^]  ^shM",
+ </br>
+<br>                 "rs    ^^  ^shN",  "us    ^_  ^shO",
+ </br>
+<br>     "sp", "!", "\"", "#", "$", "%", "&", "'",
+ </br>
+<br>     "(", ")", "*", "+", ",", "-", ".", "/",
+ </br>
+<br>     "0", "1", "2", "3", "4", "5", "6", "7",
+ </br>
+<br>     "8", "9", ":", ";", "<", "=", ">", "?",
+ </br>
+<br>     "@", "A", "B", "C", "D", "E", "F", "G",
+ </br>
+<br>     "H", "I", "J", "K", "L", "M", "N", "O",
+ </br>
+<br>     "P", "Q", "R", "S", "T", "U", "V", "W",
+ </br>
+<br>     "X", "Y", "Z", "[", "\\", "]", "^", "_",
+ </br>
+<br>     "`", "a", "b", "c", "d", "e", "f", "g",
+ </br>
+<br>     "h", "i", "j", "k", "l", "m", "n", "o",
+ </br>
+<br>     "p", "q", "r", "s", "t", "u", "v", "w",
+ </br>
+<br>     "x", "y", "z", "{", "|", "}", "~", "del   ^?"
+ </br>
+<br> };
+ </br>
+<br> static void show_char(int c) {
+ </br>
+<br>     printf(" %#4x  %#4o  %3d    %s\n", c, c, c, value[c]);
+ </br>
+<br> }
+ </br>
+<br> int main(int argc, char **argv) {
+ </br>
+<br>     struct termios orig, new;
+ </br>
+<br>     int base, current, last, lastlast;
+ </br>
+<br>     current = last = lastlast = -1;
+ </br>
+<br>     if (argc > 1) {
+ </br>
+<br>         if (*argv[1] == '-') {
+ </br>
+<br>             for (current = 0; current <= 127; current++)
+ </br>
+<br>             show_char(current);
+ </br>
+<br>         } else {
+ </br>
+<br>             for (int i = 1; i < argc; i++) {
+ </br>
+<br>                 char *cp = argv[i];
+ </br>
+<br>                 current = 0;
+ </br>
+<br>                 switch (*cp) {
+ </br>
+<br>                 case '0':
+ </br>
+<br>                     base = 8;
+ </br>
+<br>                     cp++;
+ </br>
+<br>                     if (*cp != 'x')
+ </br>
+<br>                         break;
+ </br>
+<br>                     /* else fall through */
+ </br>
+<br>                 case 'x':
+ </br>
+<br>                     base = 16;
+ </br>
+<br>                     cp++;
+ </br>
+<br>                     break;
+ </br>
+<br>                 default:
+ </br>
+<br>                     base = 10;
+ </br>
+<br>                 }
+ </br>
+<br>                 for (;; ++cp) {
+ </br>
+<br>                     int d;
+ </br>
+<br>                     if (!isxdigit (*cp))
+ </br>
+<br>                         break;
+ </br>
+<br>                     if (isdigit (*cp))
+ </br>
+<br>                         d = *cp - '0';
+ </br>
+<br>                     else if (isupper (*cp))
+ </br>
+<br>                         d = *cp - 'A' + 10;
+ </br>
+<br>                     else
+ </br>
+<br>                         d = *cp - 'a' + 10;
+ </br>
+<br>                     if (d > base)
+ </br>
+<br>                         break;
+ </br>
+<br>                     current = base * current + d;
+ </br>
+<br>                 }
+ </br>
+<br>                 if (*cp != '\0') {
+ </br>
+<br>                     printf("%s???\n", cp);
+ </br>
+<br>                     exit(1);
+ </br>
+<br>                 }
+ </br>
+<br>                 if (current <= 127) {
+ </br>
+<br>                     show_char(current);
+ </br>
+<br>                 }
+ </br>
+<br>                 else printf("value %s out of range\n", argv[i]);
+ </br>
+<br>             }
+ </br>
+<br>         }
+ </br>
+<br>     } else {
+ </br>
+<br>         (void) tcgetattr(2, &orig);
+ </br>
+<br>         new = orig;
+ </br>
+<br>         (void) cfmakeraw(&new);
+ </br>
+<br>         (void) tcsetattr(2, TCSANOW, &new);
+ </br>
+<br>         while (((current = (0177 & getchar())) != last) || (current != lastlast)) {
+ </br>
+<br>             lastlast = last;
+ </br>
+<br>             last = current;
+ </br>
+<br>             show_char(current);
+ </br>
+<br>             putchar('\r');      // device is raw
+ </br>
+<br>         }
+ </br>
+<br>         (void) tcsetattr(2, TCSANOW, &orig);
+ </br>
+<br>     }
+ </br>
+<br> }
+ </br>
+</p>
+</div>
+<div class="column" style="background-color:#bbb;">
+ <h2> Assembly </h2>
+<p>
+<br> test:     file format elf64-x86-64
+ </br>
+<br> Disassembly of section .init:
+ </br>
+<br> 0000000000401000 <_init>:
+ </br>
+<br>   401000:	f3 0f 1e fa          	endbr64 
+ </br>
+<br>   401004:	48 83 ec 08          	sub    $0x8,%rsp
+ </br>
+<br>   401008:	48 8b 05 e9 2f 00 00 	mov    0x2fe9(%rip),%rax        # 403ff8 <__gmon_start__@Base>
+ </br>
+<br>   40100f:	48 85 c0             	test   %rax,%rax
+ </br>
+<br>   401012:	74 02                	je     401016 <_init+0x16>
+ </br>
+<br>   401014:	ff d0                	call   *%rax
+ </br>
+<br>   401016:	48 83 c4 08          	add    $0x8,%rsp
+ </br>
+<br>   40101a:	c3                   	ret    
+ </br>
+<br> Disassembly of section .plt:
+ </br>
+<br> 0000000000401020 <printf@plt-0x10>:
+ </br>
+<br>   401020:	ff 35 e2 2f 00 00    	push   0x2fe2(%rip)        # 404008 <_GLOBAL_OFFSET_TABLE_+0x8>
+ </br>
+<br>   401026:	ff 25 e4 2f 00 00    	jmp    *0x2fe4(%rip)        # 404010 <_GLOBAL_OFFSET_TABLE_+0x10>
+ </br>
+<br>   40102c:	0f 1f 40 00          	nopl   0x0(%rax)
+ </br>
+<br> 0000000000401030 <printf@plt>:
+ </br>
+<br>   401030:	ff 25 e2 2f 00 00    	jmp    *0x2fe2(%rip)        # 404018 <printf@GLIBC_2.2.5>
+ </br>
+<br>   401036:	68 00 00 00 00       	push   $0x0
+ </br>
+<br>   40103b:	e9 e0 ff ff ff       	jmp    401020 <_init+0x20>
+ </br>
+<br> 0000000000401040 <putc@plt>:
+ </br>
+<br>   401040:	ff 25 da 2f 00 00    	jmp    *0x2fda(%rip)        # 404020 <putc@GLIBC_2.2.5>
+ </br>
+<br>   401046:	68 01 00 00 00       	push   $0x1
+ </br>
+<br>   40104b:	e9 d0 ff ff ff       	jmp    401020 <_init+0x20>
+ </br>
+<br> 0000000000401050 <cfmakeraw@plt>:
+ </br>
+<br>   401050:	ff 25 d2 2f 00 00    	jmp    *0x2fd2(%rip)        # 404028 <cfmakeraw@GLIBC_2.2.5>
+ </br>
+<br>   401056:	68 02 00 00 00       	push   $0x2
+ </br>
+<br>   40105b:	e9 c0 ff ff ff       	jmp    401020 <_init+0x20>
+ </br>
+<br> 0000000000401060 <tcgetattr@plt>:
+ </br>
+<br>   401060:	ff 25 ca 2f 00 00    	jmp    *0x2fca(%rip)        # 404030 <tcgetattr@GLIBC_2.2.5>
+ </br>
+<br>   401066:	68 03 00 00 00       	push   $0x3
+ </br>
+<br>   40106b:	e9 b0 ff ff ff       	jmp    401020 <_init+0x20>
+ </br>
+<br> 0000000000401070 <tcsetattr@plt>:
+ </br>
+<br>   401070:	ff 25 c2 2f 00 00    	jmp    *0x2fc2(%rip)        # 404038 <tcsetattr@GLIBC_2.2.5>
+ </br>
+<br>   401076:	68 04 00 00 00       	push   $0x4
+ </br>
+<br>   40107b:	e9 a0 ff ff ff       	jmp    401020 <_init+0x20>
+ </br>
+<br> 0000000000401080 <exit@plt>:
+ </br>
+<br>   401080:	ff 25 ba 2f 00 00    	jmp    *0x2fba(%rip)        # 404040 <exit@GLIBC_2.2.5>
+ </br>
+<br>   401086:	68 05 00 00 00       	push   $0x5
+ </br>
+<br>   40108b:	e9 90 ff ff ff       	jmp    401020 <_init+0x20>
+ </br>
+<br> 0000000000401090 <getc@plt>:
+ </br>
+<br>   401090:	ff 25 b2 2f 00 00    	jmp    *0x2fb2(%rip)        # 404048 <getc@GLIBC_2.2.5>
+ </br>
+<br>   401096:	68 06 00 00 00       	push   $0x6
+ </br>
+<br>   40109b:	e9 80 ff ff ff       	jmp    401020 <_init+0x20>
+ </br>
+<br> 00000000004010a0 <__ctype_b_loc@plt>:
+ </br>
+<br>   4010a0:	ff 25 aa 2f 00 00    	jmp    *0x2faa(%rip)        # 404050 <__ctype_b_loc@GLIBC_2.3>
+ </br>
+<br>   4010a6:	68 07 00 00 00       	push   $0x7
+ </br>
+<br>   4010ab:	e9 70 ff ff ff       	jmp    401020 <_init+0x20>
+ </br>
+<br> Disassembly of section .text:
+ </br>
+<br> 00000000004010b0 <_start>:
+ </br>
+<br>   4010b0:	f3 0f 1e fa          	endbr64 
+ </br>
+<br>   4010b4:	31 ed                	xor    %ebp,%ebp
+ </br>
+<br>   4010b6:	49 89 d1             	mov    %rdx,%r9
+ </br>
+<br>   4010b9:	5e                   	pop    %rsi
+ </br>
+<br>   4010ba:	48 89 e2             	mov    %rsp,%rdx
+ </br>
+<br>   4010bd:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp
+ </br>
+<br>   4010c1:	50                   	push   %rax
+ </br>
+<br>   4010c2:	54                   	push   %rsp
+ </br>
+<br>   4010c3:	45 31 c0             	xor    %r8d,%r8d
+ </br>
+<br>   4010c6:	31 c9                	xor    %ecx,%ecx
+ </br>
+<br>   4010c8:	48 c7 c7 bf 11 40 00 	mov    $0x4011bf,%rdi
+ </br>
+<br>   4010cf:	ff 15 1b 2f 00 00    	call   *0x2f1b(%rip)        # 403ff0 <__libc_start_main@GLIBC_2.34>
+ </br>
+<br>   4010d5:	f4                   	hlt    
+ </br>
+<br> 00000000004010d6 <.annobin_abi_note.c>:
+ </br>
+<br>   4010d6:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
+ </br>
+<br>   4010dd:	00 00 00 
+ </br>
+<br> 00000000004010e0 <_dl_relocate_static_pie>:
+ </br>
+<br>   4010e0:	f3 0f 1e fa          	endbr64 
+ </br>
+<br>   4010e4:	c3                   	ret    
+ </br>
+<br> 00000000004010e5 <.annobin__dl_relocate_static_pie.end>:
+ </br>
+<br>   4010e5:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
+ </br>
+<br>   4010ec:	00 00 00 
+ </br>
+<br>   4010ef:	90                   	nop
+ </br>
+<br> 00000000004010f0 <deregister_tm_clones>:
+ </br>
+<br>   4010f0:	b8 80 44 40 00       	mov    $0x404480,%eax
+ </br>
+<br>   4010f5:	48 3d 80 44 40 00    	cmp    $0x404480,%rax
+ </br>
+<br>   4010fb:	74 13                	je     401110 <deregister_tm_clones+0x20>
+ </br>
+<br>   4010fd:	b8 00 00 00 00       	mov    $0x0,%eax
+ </br>
+<br>   401102:	48 85 c0             	test   %rax,%rax
+ </br>
+<br>   401105:	74 09                	je     401110 <deregister_tm_clones+0x20>
+ </br>
+<br>   401107:	bf 80 44 40 00       	mov    $0x404480,%edi
+ </br>
+<br>   40110c:	ff e0                	jmp    *%rax
+ </br>
+<br>   40110e:	66 90                	xchg   %ax,%ax
+ </br>
+<br>   401110:	c3                   	ret    
+ </br>
+<br>   401111:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+ </br>
+<br>   401118:	00 00 00 00 
+ </br>
+<br>   40111c:	0f 1f 40 00          	nopl   0x0(%rax)
+ </br>
+<br> 0000000000401120 <register_tm_clones>:
+ </br>
+<br>   401120:	be 80 44 40 00       	mov    $0x404480,%esi
+ </br>
+<br>   401125:	48 81 ee 80 44 40 00 	sub    $0x404480,%rsi
+ </br>
+<br>   40112c:	48 89 f0             	mov    %rsi,%rax
+ </br>
+<br>   40112f:	48 c1 ee 3f          	shr    $0x3f,%rsi
+ </br>
+<br>   401133:	48 c1 f8 03          	sar    $0x3,%rax
+ </br>
+<br>   401137:	48 01 c6             	add    %rax,%rsi
+ </br>
+<br>   40113a:	48 d1 fe             	sar    %rsi
+ </br>
+<br>   40113d:	74 11                	je     401150 <register_tm_clones+0x30>
+ </br>
+<br>   40113f:	b8 00 00 00 00       	mov    $0x0,%eax
+ </br>
+<br>   401144:	48 85 c0             	test   %rax,%rax
+ </br>
+<br>   401147:	74 07                	je     401150 <register_tm_clones+0x30>
+ </br>
+<br>   401149:	bf 80 44 40 00       	mov    $0x404480,%edi
+ </br>
+<br>   40114e:	ff e0                	jmp    *%rax
+ </br>
+<br>   401150:	c3                   	ret    
+ </br>
+<br>   401151:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+ </br>
+<br>   401158:	00 00 00 00 
+ </br>
+<br>   40115c:	0f 1f 40 00          	nopl   0x0(%rax)
+ </br>
+<br> 0000000000401160 <__do_global_dtors_aux>:
+ </br>
+<br>   401160:	f3 0f 1e fa          	endbr64 
+ </br>
+<br>   401164:	80 3d 2d 33 00 00 00 	cmpb   $0x0,0x332d(%rip)        # 404498 <completed.0>
+ </br>
+<br>   40116b:	75 13                	jne    401180 <__do_global_dtors_aux+0x20>
+ </br>
+<br>   40116d:	55                   	push   %rbp
+ </br>
+<br>   40116e:	48 89 e5             	mov    %rsp,%rbp
+ </br>
+<br>   401171:	e8 7a ff ff ff       	call   4010f0 <deregister_tm_clones>
+ </br>
+<br>   401176:	c6 05 1b 33 00 00 01 	movb   $0x1,0x331b(%rip)        # 404498 <completed.0>
+ </br>
+<br>   40117d:	5d                   	pop    %rbp
+ </br>
+<br>   40117e:	c3                   	ret    
+ </br>
+<br>   40117f:	90                   	nop
+ </br>
+<br>   401180:	c3                   	ret    
+ </br>
+<br>   401181:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+ </br>
+<br>   401188:	00 00 00 00 
+ </br>
+<br>   40118c:	0f 1f 40 00          	nopl   0x0(%rax)
+ </br>
+<br> 0000000000401190 <frame_dummy>:
+ </br>
+<br>   401190:	f3 0f 1e fa          	endbr64 
+ </br>
+<br>   401194:	eb 8a                	jmp    401120 <register_tm_clones>
+ </br>
+<br> 0000000000401196 <show_char>:
+ </br>
+<br>   401196:	48 83 ec 08          	sub    $0x8,%rsp
+ </br>
+<br>   40119a:	89 fe                	mov    %edi,%esi
+ </br>
+<br>   40119c:	48 63 c7             	movslq %edi,%rax
+ </br>
+<br>   40119f:	4c 8b 04 c5 80 40 40 	mov    0x404080(,%rax,8),%r8
+ </br>
+<br>   4011a6:	00 
+ </br>
+<br>   4011a7:	89 f9                	mov    %edi,%ecx
+ </br>
+<br>   4011a9:	89 fa                	mov    %edi,%edx
+ </br>
+<br>   4011ab:	bf 10 20 40 00       	mov    $0x402010,%edi
+ </br>
+<br>   4011b0:	b8 00 00 00 00       	mov    $0x0,%eax
+ </br>
+<br>   4011b5:	e8 76 fe ff ff       	call   401030 <printf@plt>
+ </br>
+<br>   4011ba:	48 83 c4 08          	add    $0x8,%rsp
+ </br>
+<br>   4011be:	c3                   	ret    
+ </br>
+<br> 00000000004011bf <main>:
+ </br>
+<br>   4011bf:	41 55                	push   %r13
+ </br>
+<br>   4011c1:	41 54                	push   %r12
+ </br>
+<br>   4011c3:	55                   	push   %rbp
+ </br>
+<br>   4011c4:	53                   	push   %rbx
+ </br>
+<br>   4011c5:	48 81 ec 88 00 00 00 	sub    $0x88,%rsp
+ </br>
+<br>   4011cc:	83 ff 01             	cmp    $0x1,%edi
+ </br>
+<br>   4011cf:	0f 8e 1a 01 00 00    	jle    4012ef <main+0x130>
+ </br>
+<br>   4011d5:	41 89 fd             	mov    %edi,%r13d
+ </br>
+<br>   4011d8:	49 89 f4             	mov    %rsi,%r12
+ </br>
+<br>   4011db:	48 8b 46 08          	mov    0x8(%rsi),%rax
+ </br>
+<br>   4011df:	80 38 2d             	cmpb   $0x2d,(%rax)
+ </br>
+<br>   4011e2:	74 21                	je     401205 <main+0x46>
+ </br>
+<br>   4011e4:	e8 b7 fe ff ff       	call   4010a0 <__ctype_b_loc@plt>
+ </br>
+<br>   4011e9:	48 89 c5             	mov    %rax,%rbp
+ </br>
+<br>   4011ec:	49 8d 5c 24 08       	lea    0x8(%r12),%rbx
+ </br>
+<br>   4011f1:	41 8d 45 fe          	lea    -0x2(%r13),%eax
+ </br>
+<br>   4011f5:	4d 8d 64 c4 10       	lea    0x10(%r12,%rax,8),%r12
+ </br>
+<br>   4011fa:	41 bd 10 00 00 00    	mov    $0x10,%r13d
+ </br>
+<br>   401200:	e9 97 00 00 00       	jmp    40129c <main+0xdd>
+ </br>
+<br>   401205:	bb 00 00 00 00       	mov    $0x0,%ebx
+ </br>
+<br>   40120a:	89 df                	mov    %ebx,%edi
+ </br>
+<br>   40120c:	e8 85 ff ff ff       	call   401196 <show_char>
+ </br>
+<br>   401211:	83 c3 01             	add    $0x1,%ebx
+ </br>
+<br>   401214:	81 fb 80 00 00 00    	cmp    $0x80,%ebx
+ </br>
+<br>   40121a:	75 ee                	jne    40120a <main+0x4b>
+ </br>
+<br>   40121c:	e9 5f 01 00 00       	jmp    401380 <main+0x1c1>
+ </br>
+<br>   401221:	49 8d 71 01          	lea    0x1(%r9),%rsi
+ </br>
+<br>   401225:	b9 08 00 00 00       	mov    $0x8,%ecx
+ </br>
+<br>   40122a:	41 80 79 01 78       	cmpb   $0x78,0x1(%r9)
+ </br>
+<br>   40122f:	0f 85 82 00 00 00    	jne    4012b7 <main+0xf8>
+ </br>
+<br>   401235:	eb 03                	jmp    40123a <main+0x7b>
+ </br>
+<br>   401237:	4c 89 ce             	mov    %r9,%rsi
+ </br>
+<br>   40123a:	48 83 c6 01          	add    $0x1,%rsi
+ </br>
+<br>   40123e:	44 89 e9             	mov    %r13d,%ecx
+ </br>
+<br>   401241:	eb 74                	jmp    4012b7 <main+0xf8>
+ </br>
+<br>   401243:	f6 c4 01             	test   $0x1,%ah
+ </br>
+<br>   401246:	74 31                	je     401279 <main+0xba>
+ </br>
+<br>   401248:	0f be c2             	movsbl %dl,%eax
+ </br>
+<br>   40124b:	83 e8 37             	sub    $0x37,%eax
+ </br>
+<br>   40124e:	39 c8                	cmp    %ecx,%eax
+ </br>
+<br>   401250:	7f 2f                	jg     401281 <main+0xc2>
+ </br>
+<br>   401252:	0f af f9             	imul   %ecx,%edi
+ </br>
+<br>   401255:	01 c7                	add    %eax,%edi
+ </br>
+<br>   401257:	48 83 c6 01          	add    $0x1,%rsi
+ </br>
+<br>   40125b:	0f b6 16             	movzbl (%rsi),%edx
+ </br>
+<br>   40125e:	48 0f be c2          	movsbq %dl,%rax
+ </br>
+<br>   401262:	41 0f b7 04 40       	movzwl (%r8,%rax,2),%eax
+ </br>
+<br>   401267:	f6 c4 10             	test   $0x10,%ah
+ </br>
+<br>   40126a:	74 15                	je     401281 <main+0xc2>
+ </br>
+<br>   40126c:	f6 c4 08             	test   $0x8,%ah
+ </br>
+<br>   40126f:	74 d2                	je     401243 <main+0x84>
+ </br>
+<br>   401271:	0f be c2             	movsbl %dl,%eax
+ </br>
+<br>   401274:	83 e8 30             	sub    $0x30,%eax
+ </br>
+<br>   401277:	eb d5                	jmp    40124e <main+0x8f>
+ </br>
+<br>   401279:	0f be c2             	movsbl %dl,%eax
+ </br>
+<br>   40127c:	83 e8 57             	sub    $0x57,%eax
+ </br>
+<br>   40127f:	eb cd                	jmp    40124e <main+0x8f>
+ </br>
+<br>   401281:	84 d2                	test   %dl,%dl
+ </br>
+<br>   401283:	75 3d                	jne    4012c2 <main+0x103>
+ </br>
+<br>   401285:	83 ff 7f             	cmp    $0x7f,%edi
+ </br>
+<br>   401288:	7f 51                	jg     4012db <main+0x11c>
+ </br>
+<br>   40128a:	e8 07 ff ff ff       	call   401196 <show_char>
+ </br>
+<br>   40128f:	48 83 c3 08          	add    $0x8,%rbx
+ </br>
+<br>   401293:	4c 39 e3             	cmp    %r12,%rbx
+ </br>
+<br>   401296:	0f 84 e4 00 00 00    	je     401380 <main+0x1c1>
+ </br>
+<br>   40129c:	4c 8b 0b             	mov    (%rbx),%r9
+ </br>
+<br>   40129f:	41 0f b6 01          	movzbl (%r9),%eax
+ </br>
+<br>   4012a3:	3c 30                	cmp    $0x30,%al
+ </br>
+<br>   4012a5:	0f 84 76 ff ff ff    	je     401221 <main+0x62>
+ </br>
+<br>   4012ab:	3c 78                	cmp    $0x78,%al
+ </br>
+<br>   4012ad:	74 88                	je     401237 <main+0x78>
+ </br>
+<br>   4012af:	4c 89 ce             	mov    %r9,%rsi
+ </br>
+<br>   4012b2:	b9 0a 00 00 00       	mov    $0xa,%ecx
+ </br>
+<br>   4012b7:	4c 8b 45 00          	mov    0x0(%rbp),%r8
+ </br>
+<br>   4012bb:	bf 00 00 00 00       	mov    $0x0,%edi
+ </br>
+<br>   4012c0:	eb 99                	jmp    40125b <main+0x9c>
+ </br>
+<br>   4012c2:	bf 28 20 40 00       	mov    $0x402028,%edi
+ </br>
+<br>   4012c7:	b8 00 00 00 00       	mov    $0x0,%eax
+ </br>
+<br>   4012cc:	e8 5f fd ff ff       	call   401030 <printf@plt>
+ </br>
+<br>   4012d1:	bf 01 00 00 00       	mov    $0x1,%edi
+ </br>
+<br>   4012d6:	e8 a5 fd ff ff       	call   401080 <exit@plt>
+ </br>
+<br>   4012db:	4c 89 ce             	mov    %r9,%rsi
+ </br>
+<br>   4012de:	bf 2f 20 40 00       	mov    $0x40202f,%edi
+ </br>
+<br>   4012e3:	b8 00 00 00 00       	mov    $0x0,%eax
+ </br>
+<br>   4012e8:	e8 43 fd ff ff       	call   401030 <printf@plt>
+ </br>
+<br>   4012ed:	eb a0                	jmp    40128f <main+0xd0>
+ </br>
+<br>   4012ef:	48 8d 5c 24 40       	lea    0x40(%rsp),%rbx
+ </br>
+<br>   4012f4:	48 89 de             	mov    %rbx,%rsi
+ </br>
+<br>   4012f7:	bf 02 00 00 00       	mov    $0x2,%edi
+ </br>
+<br>   4012fc:	e8 5f fd ff ff       	call   401060 <tcgetattr@plt>
+ </br>
+<br>   401301:	48 89 e7             	mov    %rsp,%rdi
+ </br>
+<br>   401304:	b9 0f 00 00 00       	mov    $0xf,%ecx
+ </br>
+<br>   401309:	48 89 de             	mov    %rbx,%rsi
+ </br>
+<br>   40130c:	f3 a5                	rep movsl %ds:(%rsi),%es:(%rdi)
+ </br>
+<br>   40130e:	48 89 e7             	mov    %rsp,%rdi
+ </br>
+<br>   401311:	e8 3a fd ff ff       	call   401050 <cfmakeraw@plt>
+ </br>
+<br>   401316:	48 89 e2             	mov    %rsp,%rdx
+ </br>
+<br>   401319:	be 00 00 00 00       	mov    $0x0,%esi
+ </br>
+<br>   40131e:	bf 02 00 00 00       	mov    $0x2,%edi
+ </br>
+<br>   401323:	e8 48 fd ff ff       	call   401070 <tcsetattr@plt>
+ </br>
+<br>   401328:	41 bc ff ff ff ff    	mov    $0xffffffff,%r12d
+ </br>
+<br>   40132e:	bd ff ff ff ff       	mov    $0xffffffff,%ebp
+ </br>
+<br>   401333:	eb 1d                	jmp    401352 <main+0x193>
+ </br>
+<br>   401335:	89 df                	mov    %ebx,%edi
+ </br>
+<br>   401337:	e8 5a fe ff ff       	call   401196 <show_char>
+ </br>
+<br>   40133c:	48 8b 35 3d 31 00 00 	mov    0x313d(%rip),%rsi        # 404480 <stdout@@GLIBC_2.2.5>
+ </br>
+<br>   401343:	bf 0d 00 00 00       	mov    $0xd,%edi
+ </br>
+<br>   401348:	e8 f3 fc ff ff       	call   401040 <putc@plt>
+ </br>
+<br>   40134d:	41 89 ec             	mov    %ebp,%r12d
+ </br>
+<br>   401350:	89 dd                	mov    %ebx,%ebp
+ </br>
+<br>   401352:	48 8b 3d 37 31 00 00 	mov    0x3137(%rip),%rdi        # 404490 <stdin@@GLIBC_2.2.5>
+ </br>
+<br>   401359:	e8 32 fd ff ff       	call   401090 <getc@plt>
+ </br>
+<br>   40135e:	83 e0 7f             	and    $0x7f,%eax
+ </br>
+<br>   401361:	89 c3                	mov    %eax,%ebx
+ </br>
+<br>   401363:	41 39 c4             	cmp    %eax,%r12d
+ </br>
+<br>   401366:	75 cd                	jne    401335 <main+0x176>
+ </br>
+<br>   401368:	39 c5                	cmp    %eax,%ebp
+ </br>
+<br>   40136a:	75 c9                	jne    401335 <main+0x176>
+ </br>
+<br>   40136c:	48 8d 54 24 40       	lea    0x40(%rsp),%rdx
+ </br>
+<br>   401371:	be 00 00 00 00       	mov    $0x0,%esi
+ </br>
+<br>   401376:	bf 02 00 00 00       	mov    $0x2,%edi
+ </br>
+<br>   40137b:	e8 f0 fc ff ff       	call   401070 <tcsetattr@plt>
+ </br>
+<br>   401380:	b8 00 00 00 00       	mov    $0x0,%eax
+ </br>
+<br>   401385:	48 81 c4 88 00 00 00 	add    $0x88,%rsp
+ </br>
+<br>   40138c:	5b                   	pop    %rbx
+ </br>
+<br>   40138d:	5d                   	pop    %rbp
+ </br>
+<br>   40138e:	41 5c                	pop    %r12
+ </br>
+<br>   401390:	41 5d                	pop    %r13
+ </br>
+<br>   401392:	c3                   	ret    
+ </br>
+<br> Disassembly of section .fini:
+ </br>
+<br> 0000000000401394 <_fini>:
+ </br>
+<br>   401394:	f3 0f 1e fa          	endbr64 
+ </br>
+<br>   401398:	48 83 ec 08          	sub    $0x8,%rsp
+ </br>
+<br>   40139c:	48 83 c4 08          	add    $0x8,%rsp
+ </br>
+<br>   4013a0:	c3                   	ret    
+ </br>
+</p>
+ </div>
+</BODY></HTML>
