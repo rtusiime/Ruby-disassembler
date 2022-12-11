@@ -140,13 +140,9 @@ file.write <<-HTML
 <!doctype html>
 <html>
 <!--
-    This is a sample of the sort of output your tool should produce.
-    It has been created (by hand) for the ascii.c test program.
-
-    (c) Michael L. Scott, 2022.
-    For use by students in CSC 2/454 at the University of Rochester,
-    during the Fall 2022 term.  All other use requires written permission
-    of the author.
+    This is the code for HTML file that will be generated once the user runs the program.
+    It's greatly inspired by the code from Prof Scott's ascii_disassem.html file. The javascript,
+    HMTL, and CSS have mostly been copied word for word from the doc.
 -->
 <style>
 button {
@@ -244,60 +240,28 @@ function sclick(sline, aline) {
 }
 </script>
 
-<h1>ascii</h1>
+<h1>#{ARGV[0]}</h1>
 
 <table width="100%">
 <tr>
 <td width="49%">
 <h2>source</h2>
-<!--
-    In each span of the following division, the id indicates the line number, which is
-    used to identify the line for scrollIntoView.  The aline attribute lists the assembly
-    line(s) associated with the source line -- the ones that should, if clicked, cause
-    this source line to highlight.
-
-    Each call of sclick(s, a) is passed two arguments.  The initial argument indicates
-    which source line this is -- it will cause any assembly line(s) associated with
-    that source line to be highlighted.  The second argument is the lowest-numbered
-    assembly line associated with that source line; this line will be scrolled into view
-    in the assembly pane.
--->
 <div id="source">
-<button           >&nbsp;&nbsp;1</button> <span id="s1" aline=""                                               >/* This program gives information about an ascii code.</span>
-<button           >&nbsp;&nbsp;2</button> <span id="s2" aline=""                                               >** Its arguments are taken as octal, hex, or decimal numbers</span>
-<button           >&nbsp;&nbsp;3</button> <span id="s3" aline=""                                               >** and it prints information about the character.</span>
-<button           >&nbsp;&nbsp;4</button> <span id="s4" aline=""                                               >** With an argument of -, all values are printed.</span>
-<button           >&nbsp;&nbsp;5</button> <span id="s5" aline=""                                               >** With no argument, ascii expects characters from the keyboard.</span>
-<button           >&nbsp;&nbsp;6</button> <span id="s6" aline=""                                               >** To exit, push the same key three times in a row.</span>
-<button           >&nbsp;&nbsp;7</button> <span id="s7" aline=""                                               >*/</span>
-<button           >&nbsp;&nbsp;8</button> <span id="s8" aline=""                                               ></span>
-<button           >&nbsp;&nbsp;9</button> <span id="s9" aline=""                                               >#include &lt;stdlib.h&gt;</span>
-<button           >&nbsp;10</button> <span id="s10" aline=""                                                   >#include &lt;stdio.h&gt;</span>
-<button           >&nbsp;11</button> <span id="s11" aline=""                                                   >#include &lt;termios.h&gt;</span>
-<button           >&nbsp;12</button> <span id="s12" aline=""                                                   >#include &lt;unistd.h&gt;</span>
-<button           >&nbsp;13</button> <span id="s13" aline=""                                                   >#include &lt;ctype.h&gt;</span>
-<button           >&nbsp;14</button> <span id="s14" aline=""                                                   ></span>
-<button           >&nbsp;15</button> <span id="s15" aline=""                                                   >char *value[] = {</span>
-<button           >&nbsp;16</button> <span id="s16" aline=""                                                   >    "nul   ^@", "soh   ^A", "stx   ^B", "etx   ^C", "eot   ^D", "enq   ^E", "ack   ^F", "bel   ^G",</span>
-<button           >&nbsp;17</button> <span id="s17" aline=""                                                   >    "bs    ^H", "ht    ^I", "nl    ^J", "vt    ^K", "np    ^L", "cr    ^M", "so    ^N", "si    ^O",</span>
-<button           >&nbsp;18</button> <span id="s18" aline=""                                                   >    "dle   ^P", "dc1   ^Q", "dc2   ^R", "dc3   ^S", "dc4   ^T", "nak   ^U", "syn   ^V", "etb   ^W",</span>
-<button           >&nbsp;19</button> <span id="s19" aline=""                                                   >    "can   ^X", "em    ^Y", "sub   ^Z", "esc   ^[",</span>
-<button           >&nbsp;20</button> <span id="s20" aline=""                                                   >                "fs    ^\\  ^shL", "gs    ^]  ^shM",</span>
-<button           >&nbsp;21</button> <span id="s21" aline=""                                                   >                "rs    ^^  ^shN",  "us    ^_  ^shO",</span>
-<button           >&nbsp;22</button> <span id="s22" aline=""                                                   >    "sp", "!", "\"", "#", "$", "%", "&amp;", "'",</span>
-<button           >&nbsp;23</button> <span id="s23" aline=""                                                   >    "(", ")", "*", "+", ",", "-", ".", "/",</span>
-<button           >&nbsp;24</button> <span id="s24" aline=""                                                   >    "0", "1", "2", "3", "4", "5", "6", "7",</span>
-<button           >&nbsp;25</button> <span id="s25" aline=""                                                   >    "8", "9", ":", ";", "&lt;", "=", "&gt;", "?",</span>
-<button           >&nbsp;26</button> <span id="s26" aline=""                                                   >    "@", "A", "B", "C", "D", "E", "F", "G",</span>
-<button           >&nbsp;27</button> <span id="s27" aline=""                                                   >    "H", "I", "J", "K", "L", "M", "N", "O",</span>
-<button           >&nbsp;28</button> <span id="s28" aline=""                                                   >    "P", "Q", "R", "S", "T", "U", "V", "W",</span>
-<button           >&nbsp;29</button> <span id="s29" aline=""                                                   >    "X", "Y", "Z", "[", "\\", "]", "^", "_",</span>
-<button           >&nbsp;30</button> <span id="s30" aline=""                                                   >    "`", "a", "b", "c", "d", "e", "f", "g",</span>
-<button           >&nbsp;31</button> <span id="s31" aline=""                                                   >    "h", "i", "j", "k", "l", "m", "n", "o",</span>
-<button           >&nbsp;32</button> <span id="s32" aline=""                                                   >    "p", "q", "r", "s", "t", "u", "v", "w",</span>
-<button           >&nbsp;33</button> <span id="s33" aline=""                                                   >    "x", "y", "z", "{", "|", "}", "~", "del   ^?"</span>
-<button           >&nbsp;34</button> <span id="s34" aline=""                                                   >};</span>
-<button           >&nbsp;35</button> <span id="s35" aline=""                                                   ></span>
+HTML
+
+count = 1
+assem_lines = []
+file.open(ARGV[0]).each do |line|
+    if (sline2add.has_key?(count))
+        assem_lines = sline2add[count].map{|x| "a"+add2aline[x.to_s(16)]} #converts array of addresses to array of alines
+        file.puts "<button onclick=\"sclick('s#{count}','#{assem_lines[0]}')\">&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines}\">#{line}</span>" #adds sclick function if source line has corresponding addembly line
+    else
+    file.puts "<button>&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines}\">#{line}</span>"
+    end
+    count += 1;
+end
+
+file.write <<-HTML
 <button onclick="sclick('s36','a1')">&nbsp;36</button> <span id="s36" aline="a1 a2"                            >static void show_char(int c) {</span>
 <button onclick="sclick('s37','a3')">&nbsp;37</button> <span id="s37" aline="a3 a4 a5 a6 a7 a8 a9 a10"         >    printf(" %#4x  %#4o  %3d    %s\n", c, c, c, value[c]);</span>
 <button onclick="sclick('s38','a11')">&nbsp;38</button> <span id="s38" aline="a11 a12"                         >}</span>
