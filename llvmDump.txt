@@ -1,4 +1,4 @@
-ascii:	file format elf64-x86-64
+test:	file format elf64-x86-64
 
 .debug_line contents:
 debug_line[0x00000000]
@@ -27,7 +27,7 @@ standard_opcode_lengths[DW_LNS_fixed_advance_pc] = 1
 standard_opcode_lengths[DW_LNS_set_prologue_end] = 0
 standard_opcode_lengths[DW_LNS_set_epilogue_begin] = 0
 standard_opcode_lengths[DW_LNS_set_isa] = 1
-include_directories[  0] = "/u/scott/courses/254/assignments/disassem"
+include_directories[  0] = "/u/rtusiime/CSC254/CSC254HW5"
 include_directories[  1] = "/usr/include/bits"
 include_directories[  2] = "/usr/lib/gcc/x86_64-redhat-linux/12/include"
 include_directories[  3] = "/usr/include/bits/types"

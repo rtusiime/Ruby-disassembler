@@ -135,7 +135,7 @@ I store the address in decimal form, to convert it to hex string, use "add.to_s(
 
 # write actual html code
 file = File.new("#{ARGV[0]}_disassem.html", "w+")
-file.write << EOH
+file.write <<-HTML
 
 <!doctype html>
 <html>
@@ -540,5 +540,5 @@ function sclick(sline, aline) {
 
 </body>
 </html>
-EOH
+HTML
 file.close()

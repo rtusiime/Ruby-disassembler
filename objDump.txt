@@ -1,5 +1,5 @@
 
-ascii:     file format elf64-x86-64
+test:     file format elf64-x86-64
 
 
 Disassembly of section .init:
