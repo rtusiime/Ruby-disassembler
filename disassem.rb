@@ -251,6 +251,10 @@ HTML
 
 count = 1
 File.open(ARGV[0]).each do |line|
+	case line
+	when /^$/
+	next
+	else
     assem_lines = []
     if (sline2add.has_key?(count))
         sline2add[count].each do |val|
@@ -263,6 +267,7 @@ File.open(ARGV[0]).each do |line|
     file.puts "<button>&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines}\">#{line}</span>"
     end
     count += 1;
+	end
 end
 
 file.write <<-HTML
