@@ -256,6 +256,9 @@ File.open(ARGV[0]).each do |line|
 	next
 	else
 	line = line.chomp
+    line = line.gsub("<","&lt;")
+    line = line.gsub(">","&gt;")
+    line = line.gsub("\n", "&nbsp;")
     assem_lines = []
     if (sline2add.has_key?(count))
         sline2add[count].each do |val|
