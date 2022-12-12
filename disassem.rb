@@ -265,7 +265,7 @@ File.open(ARGV[0]).each do |line|
 		aline = add2aline[val]  
 		assem_lines.append("a"+aline.to_s)
 	end
-	puts "assem lines for count = #{count} are --->#{assem_lines}"
+	#puts "assem lines for count = #{count} are --->#{assem_lines}"
         file.puts "<button onclick=\"sclick('s#{count}','#{assem_lines[0]}')\">&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines}\">#{line}</span>" #adds sclick function if source line has corresponding addembly line
     else
     file.puts "<button>&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines}\">#{line}</span>"
@@ -284,7 +284,7 @@ HTML
 
 reach = false
 count = 1
-File.open(ARGV[0]).each do |line|
+File.open(assem_file).each do |line|
 	case line
 	when /[\d]+\s<[\w]+>:$/
 	    arr = line.split
@@ -305,17 +305,18 @@ File.open(ARGV[0]).each do |line|
         next
 	else
         if (reach)
+	puts " bruhhhhhh we reached --> #{line}" 
             line.chomp!
             line = line.gsub("<","&lt;")
             line = line.gsub(">","&gt;")
-            arr = line.split(':', 1)
-            addr = arr[0].to_i
+            arr = line.split(':', -1)
+            addr = arr[0].to_i(base=16)
             source_lines = []
-            if (add2sline.haskey?(addr))
+            if (add2sline.has_key?(addr))
                 add2sline[addr].each do |val|
                     source_lines.append("s"+val.to_s)
                 end
-            file.puts "<button onclick=\"aclick('a#{count}','#{source_lines[0]}')\">#{addr}</button><span id=\"a#{count}\" sline= \"#{assem_lines}\">#{line}</span>"
+            file.puts "<button onclick=\"aclick('a#{count}','#{source_lines[0]}')\">#{addr}</button><span id=\"a#{count}\" sline= \"#{source_lines}\">#{line}</span>"
             end
             if (addr == end_add)
                 break
@@ -323,12 +324,12 @@ File.open(ARGV[0]).each do |line|
             count += 1;
         end
     end
-    file.write <<-HTML
+end
+file.write <<-HTML
 </div>
 </td>
 </tr>
 </table>
-
 </body>
 </html>
 HTML
