@@ -116,11 +116,11 @@ function sclick(sline, aline) {
 <button>&nbsp;&nbsp;5</button> <span id="s5" aline= "[]">** With no argument, ascii expects characters from the keyboard.</span>
 <button>&nbsp;&nbsp;6</button> <span id="s6" aline= "[]">** To exit, push the same key three times in a row.</span>
 <button>&nbsp;&nbsp;7</button> <span id="s7" aline= "[]">*/</span>
-<button>&nbsp;&nbsp;8</button> <span id="s8" aline= "[]">#include <stdlib.h></span>
-<button>&nbsp;&nbsp;9</button> <span id="s9" aline= "[]">#include <stdio.h></span>
-<button>&nbsp;&nbsp;10</button> <span id="s10" aline= "[]">#include <termios.h></span>
-<button>&nbsp;&nbsp;11</button> <span id="s11" aline= "[]">#include <unistd.h></span>
-<button>&nbsp;&nbsp;12</button> <span id="s12" aline= "[]">#include <ctype.h></span>
+<button>&nbsp;&nbsp;8</button> <span id="s8" aline= "[]">#include &lt;stdlib.h&gt;</span>
+<button>&nbsp;&nbsp;9</button> <span id="s9" aline= "[]">#include &lt;stdio.h&gt;</span>
+<button>&nbsp;&nbsp;10</button> <span id="s10" aline= "[]">#include &lt;termios.h&gt;</span>
+<button>&nbsp;&nbsp;11</button> <span id="s11" aline= "[]">#include &lt;unistd.h&gt;</span>
+<button>&nbsp;&nbsp;12</button> <span id="s12" aline= "[]">#include &lt;ctype.h&gt;</span>
 <button>&nbsp;&nbsp;13</button> <span id="s13" aline= "[]">char *value[] = {</span>
 <button>&nbsp;&nbsp;14</button> <span id="s14" aline= "[]">    "nul   ^@", "soh   ^A", "stx   ^B", "etx   ^C", "eot   ^D", "enq   ^E", "ack   ^F", "bel   ^G",</span>
 <button>&nbsp;&nbsp;15</button> <span id="s15" aline= "[]">    "bs    ^H", "ht    ^I", "nl    ^J", "vt    ^K", "np    ^L", "cr    ^M", "so    ^N", "si    ^O",</span>
@@ -131,7 +131,7 @@ function sclick(sline, aline) {
 <button>&nbsp;&nbsp;20</button> <span id="s20" aline= "[]">    "sp", "!", "\"", "#", "$", "%", "&", "'",</span>
 <button>&nbsp;&nbsp;21</button> <span id="s21" aline= "[]">    "(", ")", "*", "+", ",", "-", ".", "/",</span>
 <button>&nbsp;&nbsp;22</button> <span id="s22" aline= "[]">    "0", "1", "2", "3", "4", "5", "6", "7",</span>
-<button>&nbsp;&nbsp;23</button> <span id="s23" aline= "[]">    "8", "9", ":", ";", "<", "=", ">", "?",</span>
+<button>&nbsp;&nbsp;23</button> <span id="s23" aline= "[]">    "8", "9", ":", ";", "&lt;", "=", "&gt;", "?",</span>
 <button>&nbsp;&nbsp;24</button> <span id="s24" aline= "[]">    "@", "A", "B", "C", "D", "E", "F", "G",</span>
 <button>&nbsp;&nbsp;25</button> <span id="s25" aline= "[]">    "H", "I", "J", "K", "L", "M", "N", "O",</span>
 <button>&nbsp;&nbsp;26</button> <span id="s26" aline= "[]">    "P", "Q", "R", "S", "T", "U", "V", "W",</span>
@@ -148,12 +148,12 @@ function sclick(sline, aline) {
 <button onclick="sclick('s37','a3')">&nbsp;&nbsp;37</button> <span id="s37" aline= "["a3", "a9", "a4", "a5", "a6", "a7", "a8", "a10"]">    struct termios orig, new;</span>
 <button onclick="sclick('s38','a11')">&nbsp;&nbsp;38</button> <span id="s38" aline= "["a11", "a12"]">    int base, current, last, lastlast;</span>
 <button>&nbsp;&nbsp;39</button> <span id="s39" aline= "[]">    current = last = lastlast = -1;</span>
-<button onclick="sclick('s40','a13')">&nbsp;&nbsp;40</button> <span id="s40" aline= "["a13", "a14", "a15", "a16", "a17"]">    if (argc > 1) {</span>
+<button onclick="sclick('s40','a13')">&nbsp;&nbsp;40</button> <span id="s40" aline= "["a13", "a14", "a15", "a16", "a17"]">    if (argc &gt; 1) {</span>
 <button onclick="sclick('s41','a18')">&nbsp;&nbsp;41</button> <span id="s41" aline= "["a18"]">        if (*argv[1] == '-') {</span>
-<button onclick="sclick('s42','a18')">&nbsp;&nbsp;42</button> <span id="s42" aline= "["a18"]">            for (current = 0; current <= 127; current++)</span>
+<button onclick="sclick('s42','a18')">&nbsp;&nbsp;42</button> <span id="s42" aline= "["a18"]">            for (current = 0; current &lt;= 127; current++)</span>
 <button onclick="sclick('s43','a18')">&nbsp;&nbsp;43</button> <span id="s43" aline= "["a18", "a113", "a114"]">            show_char(current);</span>
 <button onclick="sclick('s44','a18')">&nbsp;&nbsp;44</button> <span id="s44" aline= "["a18", "a19", "a20", "a21"]">        } else {</span>
-<button onclick="sclick('s45','a22')">&nbsp;&nbsp;45</button> <span id="s45" aline= "["a22", "a23", "a24"]">            for (int i = 1; i < argc; i++) {</span>
+<button onclick="sclick('s45','a22')">&nbsp;&nbsp;45</button> <span id="s45" aline= "["a22", "a23", "a24"]">            for (int i = 1; i &lt; argc; i++) {</span>
 <button onclick="sclick('s46','a32')">&nbsp;&nbsp;46</button> <span id="s46" aline= "["a32", "a35", "a36", "a37", "a38"]">                char *cp = argv[i];</span>
 <button onclick="sclick('s47','a33')">&nbsp;&nbsp;47</button> <span id="s47" aline= "["a33", "a123", "a34"]">                current = 0;</span>
 <button>&nbsp;&nbsp;48</button> <span id="s48" aline= "[]">                switch (*cp) {</span>
@@ -180,7 +180,7 @@ function sclick(sline, aline) {
 <button>&nbsp;&nbsp;69</button> <span id="s69" aline= "[]">                        d = *cp - 'A' + 10;</span>
 <button onclick="sclick('s70','a62')">&nbsp;&nbsp;70</button> <span id="s70" aline= "["a62", "a63"]">                    else</span>
 <button onclick="sclick('s71','a64')">&nbsp;&nbsp;71</button> <span id="s71" aline= "["a64", "a65", "a66"]">                        d = *cp - 'a' + 10;</span>
-<button onclick="sclick('s72','a48')">&nbsp;&nbsp;72</button> <span id="s72" aline= "["a48", "a49"]">                    if (d > base)</span>
+<button onclick="sclick('s72','a48')">&nbsp;&nbsp;72</button> <span id="s72" aline= "["a48", "a49"]">                    if (d &gt; base)</span>
 <button onclick="sclick('s73','a50')">&nbsp;&nbsp;73</button> <span id="s73" aline= "["a50", "a51"]">                        break;</span>
 <button>&nbsp;&nbsp;74</button> <span id="s74" aline= "[]">                    current = base * current + d;</span>
 <button onclick="sclick('s75','a67')">&nbsp;&nbsp;75</button> <span id="s75" aline= "["a67", "a68", "a69", "a70"]">                }</span>
@@ -188,7 +188,7 @@ function sclick(sline, aline) {
 <button>&nbsp;&nbsp;77</button> <span id="s77" aline= "[]">                    printf("%s???\n", cp);</span>
 <button onclick="sclick('s78','a54')">&nbsp;&nbsp;78</button> <span id="s78" aline= "["a54", "a55", "a56"]">                    exit(1);</span>
 <button>&nbsp;&nbsp;79</button> <span id="s79" aline= "[]">                }</span>
-<button onclick="sclick('s80','a70')">&nbsp;&nbsp;80</button> <span id="s80" aline= "["a70", "a71"]">                if (current <= 127) {</span>
+<button onclick="sclick('s80','a70')">&nbsp;&nbsp;80</button> <span id="s80" aline= "["a70", "a71"]">                if (current &lt;= 127) {</span>
 <button onclick="sclick('s81','a89')">&nbsp;&nbsp;81</button> <span id="s81" aline= "["a89", "a90", "a91"]">                    show_char(current);</span>
 <button onclick="sclick('s82','a92')">&nbsp;&nbsp;82</button> <span id="s82" aline= "["a92", "a118", "a93"]">                }</span>
 <button>&nbsp;&nbsp;83</button> <span id="s83" aline= "[]">                else printf("value %s out of range\n", argv[i]);</span>
