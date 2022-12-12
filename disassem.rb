@@ -265,10 +265,9 @@ File.open(ARGV[0]).each do |line|
 		aline = add2aline[val]  
 		assem_lines.append("a"+aline.to_s)
 	end
-	puts "assem lines for count = #{count} are --->#{assem_lines}"
-        file.puts "<button onclick=\"sclick('s#{count}','#{assem_lines[0]}')\">&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines}\">#{line}</span>" #adds sclick function if source line has corresponding addembly line
+        file.puts "<button onclick=\"sclick('s#{count}','#{assem_lines[0]}')\">&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines.join(" ")}\">#{line}</span>" #adds sclick function if source line has corresponding addembly line
     else
-    file.puts "<button>&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines}\">#{line}</span>"
+        file.puts "<button>&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines.join(" ")}\">#{line}</span>"
     end
     count += 1;
 	end
@@ -323,7 +322,7 @@ File.open(ARGV[0]).each do |line|
             count += 1;
         end
     end
-    file.write <<-HTML
+file.write <<-HTML
 </div>
 </td>
 </tr>
