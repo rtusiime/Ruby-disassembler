@@ -72,16 +72,16 @@ File.foreach(assem_file) do |line|
                 next
             end
             # passed start address
-            # puts "#{current_add.to_s(16)},#{previous_add.to_s(16)},#{previous_line}"
+            puts "#{current_add.to_s(16)},#{previous_add.to_s(16)},#{previous_line}"
             if (!add2sline.has_key?(current_add))
                 if (add2sline.has_key?(previous_add))
                     add2sline[current_add] = [previous_line]
                     sline2add[previous_line].append(current_add)
-                    aline2add[assem_num] = current_add
-                    add2aline[current_add] = assem_num
-                    assem_num = assem_num + 1
                 end
             end
+            aline2add[assem_num] = current_add
+            add2aline[current_add] = assem_num
+            assem_num = assem_num + 1
             previous_add = current_add
             previous_line = add2sline[current_add].last
         end
@@ -152,7 +152,7 @@ file.puts " <div class=\"column\" style=\"background-color:#aaa;\">"
 file.puts "<h2>Source</h2>"
 file.puts "<p>"
 File.open(ARGV[0]).each do |line|
-file.puts "<br> #{line} </br>" if line != "\n"
+    file.puts "<br> #{line} </br>" if line != "\n"
 end
 file.puts "</p>"
 file.puts "</div>"
@@ -160,7 +160,7 @@ file.puts "<div class=\"column\" style=\"background-color:#bbb;\">"
 file.puts " <h2> Assembly </h2>"
 file.puts "<p>"
 File.open("objDump.txt").each do |line|
-file.puts "<br> #{line} </br>" if line != "\n"
+    file.puts "<br> #{line} </br>" if line != "\n"
 end
 file.puts "</p>"
 file.puts " </div>"
