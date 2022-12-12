@@ -260,13 +260,15 @@ File.open(ARGV[0]).each do |line|
     line = line.gsub(">","&gt;")
     line = line.gsub(/\n/,"/n")
     assem_lines = []
+    assem_lines_str =""
     if (sline2add.has_key?(count))
         sline2add[count].each do |val|
 		aline = add2aline[val]  
 		assem_lines.append("a"+aline.to_s)
+		assem_lines_str =  assem_lines_str +" a"+aline.to_s
 	end
 	#puts "assem lines for count = #{count} are --->#{assem_lines}"
-        file.puts "<button onclick=\"sclick('s#{count}','#{assem_lines[0]}')\">&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines}\">#{line}</span>" #adds sclick function if source line has corresponding addembly line
+        file.puts "<button onclick=\"sclick('s#{count}','#{assem_lines[0]}')\">&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines_str}\">#{line}</span>" #adds sclick function if source line has corresponding addembly line
     else
     file.puts "<button>&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines}\">#{line}</span>"
     end
@@ -312,11 +314,13 @@ File.open(assem_file).each do |line|
             arr = line.split(':', -1)
             addr = arr[0].to_i(base=16)
             source_lines = []
+	    source_lines_str = ""
             if (add2sline.has_key?(addr))
                 add2sline[addr].each do |val|
                     source_lines.append("s"+val.to_s)
+		    source_lines_str = source_lines_str + " s"+val.to_s
                 end
-            file.puts "<button onclick=\"aclick('a#{count}','#{source_lines[0]}')\">#{addr}</button><span id=\"a#{count}\" sline= \"#{source_lines}\">#{line}</span>"
+            file.puts "<button onclick=\"aclick('a#{count}','#{source_lines[0]}')\">#{addr}</button><span id=\"a#{count}\" sline= \"#{source_lines_str}\">#{line}</span>"
             end
             if (addr == end_add)
                 break
