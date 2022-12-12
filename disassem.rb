@@ -77,11 +77,11 @@ File.foreach(assem_file) do |line|
                 if (add2sline.has_key?(previous_add))
                     add2sline[current_add] = [previous_line]
                     sline2add[previous_line].append(current_add)
-                    aline2add[assem_num] = current_add
-                    add2aline[current_add] = assem_num
-                    assem_num = assem_num + 1
                 end
             end
+            aline2add[assem_num] = current_add
+            add2aline[current_add] = assem_num
+            assem_num = assem_num + 1
             previous_add = current_add
             previous_line = add2sline[current_add].last
         end
@@ -250,10 +250,14 @@ function sclick(sline, aline) {
 HTML
 
 count = 1
-assem_lines = []
-file.open(ARGV[0]).each do |line|
+File.open(ARGV[0]).each do |line|
+    assem_lines = []
     if (sline2add.has_key?(count))
-        assem_lines = sline2add[count].map{|x| "a"+add2aline[x.to_s(16)]} #converts array of addresses to array of alines
+        sline2add[count].each do |val|
+		aline = add2aline[val]  
+		assem_lines.append("a"+aline.to_s)
+	end
+	puts "assem lines for count = #{count} are --->#{assem_lines}"
         file.puts "<button onclick=\"sclick('s#{count}','#{assem_lines[0]}')\">&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines}\">#{line}</span>" #adds sclick function if source line has corresponding addembly line
     else
     file.puts "<button>&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines}\">#{line}</span>"
