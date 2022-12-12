@@ -322,6 +322,7 @@ File.open(ARGV[0]).each do |line|
             count += 1;
         end
     end
+end
 file.write <<-HTML
 </div>
 </td>
