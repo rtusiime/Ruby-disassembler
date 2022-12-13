@@ -174,8 +174,13 @@ File.open(assem_file).each do |line|
 	when /^[A-Fa-f0-9]+ <[A-Za-z0-9_]+>:$/
 	    arr = line.split
         addr = arr[0].to_i(base=16)
+        # check start ?
         if(addr == start_add)
             reach = true
+        end
+        # check end ?
+        if (addr >= end_add)
+            break
         end
         if(reach)
             line = line.gsub("<","&lt;")
@@ -203,9 +208,6 @@ File.open(assem_file).each do |line|
                 end
             source_lines_str = source_lines.join(" ")
             file.puts "<button onclick=\"aclick('a#{count}','#{source_lines[0]}')\">#{addr.to_s(16)}</button><span id=\"a#{count}\" sline= \"#{source_lines_str}\">#{arr[1]}</span>"
-            end
-            if (addr == end_add)
-                break
             end
             count += 1;
         end
