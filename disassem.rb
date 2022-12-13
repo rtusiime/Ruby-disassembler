@@ -11,8 +11,8 @@ objDump  = system("objdump -d 'test' >  #{assem_file}")
 # parse dwarf table to obtain mapping 
 sline2add = {}
 add2sline = {}
-start_add = 0 
-end_add = 0
+start_add = Float::INFINITY
+end_add = -Float::INFINITY
 File.foreach(dwarf_file) do |line|
     case line
     when /^0x(.)*/
@@ -21,10 +21,12 @@ File.foreach(dwarf_file) do |line|
         add = array[0].to_i(base=16)
         line_num = array[1].to_i
         # record the start and end add
-        if (start_add==0)
+        if (add < start_add)
             start_add = add
         end
-        end_add = add
+        if (add > end_add)
+            end_add = add
+        end
         # puts "#{add} #{line_num}"
         # create source line num to address mapping
         if (sline2add.has_key?(line_num))

@@ -1,4 +1,4 @@
-source_file = "ascii.c"
+source_file = "linked_list.c"
 dwarf_file = "llvmDump.txt"
 assem_file = "objDump.txt"
 html_header_file = "header.txt"
@@ -6,8 +6,8 @@ html_header_file = "header.txt"
 # parse dwarf table to obtain mapping 
 sline2add = {}
 add2sline = {}
-start_add = 0 
-end_add = 0
+start_add = Float::INFINITY
+end_add = -Float::INFINITY
 File.foreach(dwarf_file) do |line|
     case line
     when /^0x(.)*/
@@ -16,10 +16,12 @@ File.foreach(dwarf_file) do |line|
         add = array[0].to_i(base=16)
         line_num = array[1].to_i
         # record the start and end add
-        if (start_add==0)
+        if (add < start_add)
             start_add = add
         end
-        end_add = add
+        if (add > end_add)
+            end_add = add
+        end
         # puts "#{add} #{line_num}"
         # create source line num to address mapping
         if (sline2add.has_key?(line_num))
@@ -91,7 +93,7 @@ add2sline.each do |key,value|
     add2sline[key] = value.uniq
 end
 
-=begin
+
 # print the mapping
 puts "Line to Address Mapping"
 sline2add.each do |key,value|
@@ -114,7 +116,7 @@ add2aline.each do |key,value|
     puts "#{key.to_s(16)} => #{value}"
 end
 
-=end
+
 # write actual html code
 
 
@@ -171,9 +173,10 @@ reach = false
 count = 1
 File.open(assem_file).each do |line|
 	case line
-	when /^[A-Fa-f0-9]+ <[A-Za-z0-9_.]+>:$/
+	when /[A-Fa-f0-9]+ <[a-zA-Z0-9_.]+>:/
 	    arr = line.split
         addr = arr[0].to_i(base=16)
+        # puts "#{addr.to_s(16)} =? #{start_add.to_s(16)}"
         # check start ?
         if(addr == start_add)
             reach = true
