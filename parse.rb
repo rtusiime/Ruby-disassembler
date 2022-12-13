@@ -138,7 +138,6 @@ File.open(source_file).each do |line|
 	case line
         when /^$/ # empty line print an empty line
             file.puts "<button>&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline=\"\"></span>"
-            next
         else
             line = line.chomp
             line = line.gsub("<","&lt;")
