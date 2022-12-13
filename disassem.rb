@@ -176,7 +176,7 @@ reach = false
 count = 1
 File.open(assem_file).each do |line|
 	case line
-	when /^[A-Fa-f0-9]+ <[A-Za-z0-9_]+>:$/
+	when /^[A-Fa-f0-9]+ <[A-Za-z0-9_.]+>:$/
 	    arr = line.split
         addr = arr[0].to_i(base=16)
         # check start ?
