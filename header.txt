@@ -1,13 +1,9 @@
 <!doctype html>
 <html>
 <!--
-    This is a sample of the sort of output your tool should produce.
-    It has been created (by hand) for the ascii.c test program.
-
-    (c) Michael L. Scott, 2022.
-    For use by students in CSC 2/454 at the University of Rochester,
-    during the Fall 2022 term.  All other use requires written permission
-    of the author.
+    This is the code for HTML file that will be generated once the user runs the program.
+    It's greatly inspired by the code from Prof Scott's ascii_disassem.html file. The javascript,
+    HMTL, and CSS have mostly been copied word for word from the doc.
 -->
 <style>
 button {
@@ -104,22 +100,3 @@ function sclick(sline, aline) {
   reveal(aline);
 }
 </script>
-
-<h1>ascii</h1>
-
-<table width="100%">
-<tr>
-<td width="49%">
-<h2>source</h2>
-<!--
-    In each span of the following division, the id indicates the line number, which is
-    used to identify the line for scrollIntoView.  The aline attribute lists the assembly
-    line(s) associated with the source line -- the ones that should, if clicked, cause
-    this source line to highlight.
-
-    Each call of sclick(s, a) is passed two arguments.  The initial argument indicates
-    which source line this is -- it will cause any assembly line(s) associated with
-    that source line to be highlighted.  The second argument is the lowest-numbered
-    assembly line associated with that source line; this line will be scrolled into view
-    in the assembly pane.
--->

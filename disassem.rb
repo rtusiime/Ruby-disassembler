@@ -1,6 +1,7 @@
 source_file = ARGV[0]
 dwarf_file = "llvmDump.txt"
 assem_file = "objDump.txt"
+html_header_file = "header.txt"
 
 # System command to compile c code, get drwaf table, get assembly code
 wasGood = system( "gcc -g3 -O1 -o 'test' #{source_file} " )
@@ -72,7 +73,6 @@ File.foreach(assem_file) do |line|
                 next
             end
             # passed start address
-            # puts "#{current_add.to_s(16)},#{previous_add.to_s(16)},#{previous_line}"
             if (!add2sline.has_key?(current_add))
                 if (add2sline.has_key?(previous_add))
                     add2sline[current_add] = [previous_line]
@@ -96,6 +96,7 @@ add2sline.each do |key,value|
     add2sline[key] = value.uniq
 end
 
+=begin
 # print the mapping
 puts "Line to Address Mapping"
 sline2add.each do |key,value|
@@ -118,130 +119,18 @@ add2aline.each do |key,value|
     puts "#{key.to_s(16)} => #{value}"
 end
 
-=begin
-For Kevin
-The six things you will need:
-
-sline2add - source code line to LIST of assembly address
-add2sline - assembly address to LIST of source code line 
-aline2add - assembly line to ONE assembly address
-add2aline - assembly address to ONE assembly line
-start_add - the address for the first assembly instruction
-end_add - the address for the last assembly instruction
-
-NOTE: 
-I store the address in decimal form, to convert it to hex string, use "add.to_s(16)"
 =end
-
 # write actual html code
-file = File.new("#{ARGV[0]}_disassem.html", "w+")
+
+
+file = File.new("#{source_file}_disassem.html", "w+")
+
+File.foreach(html_header_file) do |line|
+    file.puts line
+end
+file.puts "<h1>#{source_file}</h1>"
+
 file.write <<-HTML
-
-<!doctype html>
-<html>
-<!--
-    This is the code for HTML file that will be generated once the user runs the program.
-    It's greatly inspired by the code from Prof Scott's ascii_disassem.html file. The javascript,
-    HMTL, and CSS have mostly been copied word for word from the doc.
--->
-<style>
-button {
-    border: none;
-    margin: none;
-    font-family: "Courier New", "Courier", "monospace";
-    background-color: Azure;
-}
-button[onclick] {
-    background-color: LightCyan;
-}
-button[onclick]:hover {
-    background-color: PaleGreen;
-}
-#assembly {
-    height: 88vh;
-    overflow: auto;
-    font-family: "Courier New", "Courier", "monospace";
-    font-size: 80%;
-    white-space: pre
-}
-#source {
-    height: 88vh;
-    overflow: auto;
-    font-family: "Courier New", "Courier", "monospace";
-    font-size: 80%;
-    white-space: pre
-}
-table {
-    border-spacing: 0px;
-}
-td {
-    padding: 0px;
-    padding-right: 15px;
-}
-</style>
-
-<body>
-<script>
-// scroll line into the middle of its respective subwindow
-function reveal(line) {
-  const element = document.getElementById(line);
-  element.scrollIntoView({
-    behavior: 'auto',
-    block: 'center',
-    inline: 'center'
-  });
-}
-// green-highlight aline,
-// yellow-highlight all source lines that contributed to aline,
-// and scroll sline into view
-function aclick(aline, sline) {
-  const sLines = document.querySelectorAll("span[aline]");  // slines have an aline list
-  const aLines = document.querySelectorAll("span[sline]");  // alines have an sline list
-  // clear all assembly lines
-  aLines.forEach((l) => {
-    l.style.backgroundColor = 'white';
-  })
-  sLines.forEach((sl) => {
-    if (sl.matches("span[aline~="+aline+"]")) {
-        sl.style.backgroundColor = 'yellow';
-        aLines.forEach((al) => {
-          if (al.matches("span[sline~="+sl.id+"]")) {
-            al.style.backgroundColor = 'PapayaWhip';
-          }
-        })
-    } else {
-        sl.style.backgroundColor = 'white';
-    }
-  })
-  const l = document.getElementById(aline);
-  l.style.backgroundColor = 'PaleGreen';
-  reveal(sline);
-}
-// green-highlight sline,
-// yellow-highlight all assembly lines that correspond to sline,
-// and scroll aline into view
-function sclick(sline, aline) {
-  const aLines = document.querySelectorAll("span[sline]");  // alines have an sline list
-  const sLines = document.querySelectorAll("span[aline]");  // slines have an aline list
-  // clear all source lines
-  sLines.forEach((l) => {
-    l.style.backgroundColor = 'white';
-  })
-  aLines.forEach((l) => {
-    if (l.matches("span[sline~="+sline+"]")) {
-        l.style.backgroundColor = 'yellow';
-    } else {
-        l.style.backgroundColor = 'white';
-    }
-  })
-  const l = document.getElementById(sline);
-  l.style.backgroundColor = 'PaleGreen';
-  reveal(aline);
-}
-</script>
-
-<h1>#{ARGV[0]}</h1>
-
 <table width="100%">
 <tr>
 <td width="49%">
@@ -250,30 +139,30 @@ function sclick(sline, aline) {
 HTML
 
 count = 1
-File.open(ARGV[0]).each do |line|
+File.open(source_file).each do |line|
 	case line
-	when /^$/
-	next
-	else
-	line = line.chomp
-    line = line.gsub("<","&lt;")
-    line = line.gsub(">","&gt;")
-    line = line.gsub(/\n/,"/n")
-    assem_lines = []
-    assem_lines_str =""
-    if (sline2add.has_key?(count))
-        sline2add[count].each do |val|
-		aline = add2aline[val]  
-		assem_lines.append("a"+aline.to_s)
-		assem_lines_str =  assem_lines_str +" a"+aline.to_s
-	end
-	#puts "assem lines for count = #{count} are --->#{assem_lines}"
-        file.puts "<button onclick=\"sclick('s#{count}','#{assem_lines[0]}')\">&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines_str}\">#{line}</span>" #adds sclick function if source line has corresponding addembly line
-    else
-    file.puts "<button>&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines}\">#{line}</span>"
+        when /^$/ # empty line print an empty line
+            file.puts "<button>&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline=\"\"></span>"
+            next
+        else
+            line = line.chomp
+            line = line.gsub("<","&lt;")
+            line = line.gsub(">","&gt;")
+            line = line.gsub(/\n/,"/n")
+            if (sline2add.has_key?(count))
+                a_add = sline2add[count]
+                assem_lines = []
+                a_add.each do |add|
+                    aline = add2aline[add]
+                    assem_lines.append("a"+aline.to_s)
+                end
+                assem_lines_str = assem_lines.join(" ")
+                file.puts "<button onclick=\"sclick('s#{count}','#{assem_lines[0]}')\">&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"#{assem_lines_str}\">#{line}</span>" #adds sclick function if source line has corresponding addembly line
+            else
+                file.puts "<button>&nbsp;&nbsp;#{count}</button> <span id=\"s#{count}\" aline= \"\">#{line}</span>"
+            end
     end
     count += 1;
-	end
 end
 
 file.write <<-HTML
@@ -288,7 +177,7 @@ reach = false
 count = 1
 File.open(assem_file).each do |line|
 	case line
-	when /[\d]+\s<[\w]+>:$/
+	when /^[A-Fa-f0-9]+ <[A-Za-z0-9_]+>:$/
 	    arr = line.split
         addr = arr[0].to_i(base=16)
         if(addr == start_add)
@@ -302,25 +191,24 @@ File.open(assem_file).each do |line|
         next
     when /^$/
         if (reach)
-            file.puts "#{line}"
+            file.puts ""
         end
         next
 	else
         if (reach)
-	puts " bruhhhhhh we reached --> #{line}" 
+	        # puts " bruhhhhhh we reached --> #{line}" 
             line.chomp!
             line = line.gsub("<","&lt;")
             line = line.gsub(">","&gt;")
-            arr = line.split(':', -1)
+            arr = line.split(':')
             addr = arr[0].to_i(base=16)
             source_lines = []
-	    source_lines_str = ""
             if (add2sline.has_key?(addr))
                 add2sline[addr].each do |val|
                     source_lines.append("s"+val.to_s)
-		    source_lines_str = source_lines_str + " s"+val.to_s
                 end
-            file.puts "<button onclick=\"aclick('a#{count}','#{source_lines[0]}')\">#{addr}</button><span id=\"a#{count}\" sline= \"#{source_lines_str}\">#{line}</span>"
+            source_lines_str = source_lines.join(" ")
+            file.puts "<button onclick=\"aclick('a#{count}','#{source_lines[0]}')\">#{addr.to_s(16)}</button><span id=\"a#{count}\" sline= \"#{source_lines_str}\">#{arr[1]}</span>"
             end
             if (addr == end_add)
                 break
