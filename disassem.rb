@@ -4,11 +4,11 @@ dwarf_file = "llvmDump.txt"
 assem_file = "objDump.txt"
 html_header_file = "header.txt"
 
-# System command to compile c code, get drwaf table, get assembly code
+#System command to compile c code, get drwaf table, get assembly code
 llvmDump = system("llvm-dwarfdump --debug-line '#{object_file}' > #{dwarf_file}" )
-objDump  = system("objdump -d '#{object_file}'' >  #{assem_file}")
+objDump  = system("objdump -d '#{object_file}' >  #{assem_file}")
 
-# parse dwarf table to obtain mapping 
+#parse dwarf table to obtain mapping 
 sline2add = {}
 add2sline = {}
 start_add = Float::INFINITY
