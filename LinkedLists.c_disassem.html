@@ -1,0 +1,696 @@
+<!doctype html>
+<html>
+<!--
+    This is the code for HTML file that will be generated once the user runs the program.
+    It's greatly inspired by the code from Prof Scott's ascii_disassem.html file. The javascript,
+    HMTL, and CSS have mostly been copied word for word from the doc.
+-->
+<style>
+button {
+    border: none;
+    margin: none;
+    font-family: "Courier New", "Courier", "monospace";
+    background-color: Azure;
+}
+button[onclick] {
+    background-color: LightCyan;
+}
+button[onclick]:hover {
+    background-color: PaleGreen;
+}
+#assembly {
+    height: 88vh;
+    overflow: auto;
+    font-family: "Courier New", "Courier", "monospace";
+    font-size: 80%;
+    white-space: pre
+}
+#source {
+    height: 88vh;
+    overflow: auto;
+    font-family: "Courier New", "Courier", "monospace";
+    font-size: 80%;
+    white-space: pre
+}
+table {
+    border-spacing: 0px;
+}
+td {
+    padding: 0px;
+    padding-right: 15px;
+}
+</style>
+
+<body>
+<script>
+// scroll line into the middle of its respective subwindow
+function reveal(line) {
+  const element = document.getElementById(line);
+  element.scrollIntoView({
+    behavior: 'auto',
+    block: 'center',
+    inline: 'center'
+  });
+}
+// green-highlight aline,
+// yellow-highlight all source lines that contributed to aline,
+// and scroll sline into view
+function aclick(aline, sline) {
+  const sLines = document.querySelectorAll("span[aline]");  // slines have an aline list
+  const aLines = document.querySelectorAll("span[sline]");  // alines have an sline list
+  // clear all assembly lines
+  aLines.forEach((l) => {
+    l.style.backgroundColor = 'white';
+  })
+  sLines.forEach((sl) => {
+    if (sl.matches("span[aline~="+aline+"]")) {
+        sl.style.backgroundColor = 'yellow';
+        aLines.forEach((al) => {
+          if (al.matches("span[sline~="+sl.id+"]")) {
+            al.style.backgroundColor = 'PapayaWhip';
+          }
+        })
+    } else {
+        sl.style.backgroundColor = 'white';
+    }
+  })
+  const l = document.getElementById(aline);
+  l.style.backgroundColor = 'PaleGreen';
+  reveal(sline);
+}
+// green-highlight sline,
+// yellow-highlight all assembly lines that correspond to sline,
+// and scroll aline into view
+function sclick(sline, aline) {
+  const aLines = document.querySelectorAll("span[sline]");  // alines have an sline list
+  const sLines = document.querySelectorAll("span[aline]");  // slines have an aline list
+  // clear all source lines
+  sLines.forEach((l) => {
+    l.style.backgroundColor = 'white';
+  })
+  aLines.forEach((l) => {
+    if (l.matches("span[sline~="+sline+"]")) {
+        l.style.backgroundColor = 'yellow';
+    } else {
+        l.style.backgroundColor = 'white';
+    }
+  })
+  const l = document.getElementById(sline);
+  l.style.backgroundColor = 'PaleGreen';
+  reveal(aline);
+}
+</script>
+<h1>LinkedLists.c</h1>
+<table width="100%">
+<tr>
+<td width="49%">
+<h2>source</h2>
+<div id="source">
+<button>&nbsp;&nbsp;1</button> <span id="s1" aline= "">//Normal LL with all fns</span>
+<button>&nbsp;&nbsp;2</button> <span id="s2" aline= "">//kinda incomplete - work in progress</span>
+<button>&nbsp;&nbsp;3</button> <span id="s3" aline= "">//TO ADD - fn to reverse the LL</span>
+<button>&nbsp;&nbsp;4</button> <span id="s4" aline=""></span>
+<button>&nbsp;&nbsp;5</button> <span id="s5" aline=""></span>
+<button>&nbsp;&nbsp;6</button> <span id="s6" aline= "">#include&lt;stdio.h&gt;</span>
+<button>&nbsp;&nbsp;7</button> <span id="s7" aline= "">#include&lt;stdlib.h&gt;</span>
+<button>&nbsp;&nbsp;8</button> <span id="s8" aline=""></span>
+<button>&nbsp;&nbsp;9</button> <span id="s9" aline= "">struct node</span>
+<button>&nbsp;&nbsp;10</button> <span id="s10" aline= "">{</span>
+<button>&nbsp;&nbsp;11</button> <span id="s11" aline= "">	int info;</span>
+<button>&nbsp;&nbsp;12</button> <span id="s12" aline= "">	struct node* link;</span>
+<button>&nbsp;&nbsp;13</button> <span id="s13" aline= "">};</span>
+<button>&nbsp;&nbsp;14</button> <span id="s14" aline=""></span>
+<button>&nbsp;&nbsp;15</button> <span id="s15" aline= "">typedef struct node node;</span>
+<button>&nbsp;&nbsp;16</button> <span id="s16" aline=""></span>
+<button>&nbsp;&nbsp;17</button> <span id="s17" aline= "">node *head=NULL, *head2=NULL;</span>
+<button>&nbsp;&nbsp;18</button> <span id="s18" aline=""></span>
+<button>&nbsp;&nbsp;19</button> <span id="s19" aline= "">//*head=NULL;</span>
+<button>&nbsp;&nbsp;20</button> <span id="s20" aline= "">//*head2=NULL;</span>
+<button>&nbsp;&nbsp;21</button> <span id="s21" aline=""></span>
+<button>&nbsp;&nbsp;22</button> <span id="s22" aline= "">void Binsert(int);</span>
+<button>&nbsp;&nbsp;23</button> <span id="s23" aline= "">void Einsert(int,node*);</span>
+<button>&nbsp;&nbsp;24</button> <span id="s24" aline= "">void Minsert(int);</span>
+<button>&nbsp;&nbsp;25</button> <span id="s25" aline= "">void Display(node*);</span>
+<button>&nbsp;&nbsp;26</button> <span id="s26" aline= "">void Bdelete();</span>
+<button>&nbsp;&nbsp;27</button> <span id="s27" aline= "">void Edelete();</span>
+<button>&nbsp;&nbsp;28</button> <span id="s28" aline= "">void Mdelete(int);</span>
+<button>&nbsp;&nbsp;29</button> <span id="s29" aline= "">void DeleteLL(node*);</span>
+<button>&nbsp;&nbsp;30</button> <span id="s30" aline= "">//void copy();</span>
+<button>&nbsp;&nbsp;31</button> <span id="s31" aline= "">//node* locate(node*, int);</span>
+<button>&nbsp;&nbsp;32</button> <span id="s32" aline= "">//void reverse(node*);</span>
+<button>&nbsp;&nbsp;33</button> <span id="s33" aline= "">//void swaplink(node*);</span>
+<button>&nbsp;&nbsp;34</button> <span id="s34" aline= "">//void len(node*);</span>
+<button>&nbsp;&nbsp;35</button> <span id="s35" aline=""></span>
+<button>&nbsp;&nbsp;36</button> <span id="s36" aline=""></span>
+<button>&nbsp;&nbsp;37</button> <span id="s37" aline= "">int main()</span>
+<button onclick="sclick('s38','a121')">&nbsp;&nbsp;38</button> <span id="s38" aline= "a121 a122">{</span>
+<button onclick="sclick('s39','a132')">&nbsp;&nbsp;39</button> <span id="s39" aline= "a132 a193">	while(1)</span>
+<button onclick="sclick('s40','a193')">&nbsp;&nbsp;40</button> <span id="s40" aline= "a193">	{</span>
+<button onclick="sclick('s41','a132')">&nbsp;&nbsp;41</button> <span id="s41" aline= "a132">		int opt,ele;</span>
+<button onclick="sclick('s42','a132')">&nbsp;&nbsp;42</button> <span id="s42" aline= "a132 a133">		printf("\nEnter what you wanna do:\n1.Binsert\n2.Einsert\n3.Minsert\n4.Display\n5.Bdelete\n6.Edelete\n7.Mdelete\n8.Copy\n9.DeleteLL\n10.Reverse\n11.Quit\n");</span>
+<button onclick="sclick('s43','a134')">&nbsp;&nbsp;43</button> <span id="s43" aline= "a134 a135 a136 a137">		scanf("%d",&opt);</span>
+<button onclick="sclick('s44','a138')">&nbsp;&nbsp;44</button> <span id="s44" aline= "a138 a139 a140 a141">		switch(opt)</span>
+<button>&nbsp;&nbsp;45</button> <span id="s45" aline= "">		{</span>
+<button>&nbsp;&nbsp;46</button> <span id="s46" aline= "">			case 1:</span>
+<button>&nbsp;&nbsp;47</button> <span id="s47" aline= "">				{</span>
+<button onclick="sclick('s48','a123')">&nbsp;&nbsp;48</button> <span id="s48" aline= "a123 a124 a125">					printf("\nEnter the element");</span>
+<button onclick="sclick('s49','a126')">&nbsp;&nbsp;49</button> <span id="s49" aline= "a126 a127 a128 a129">					scanf("%d",&ele);</span>
+<button onclick="sclick('s50','a130')">&nbsp;&nbsp;50</button> <span id="s50" aline= "a130 a131">					Binsert(ele);</span>
+<button onclick="sclick('s51','a132')">&nbsp;&nbsp;51</button> <span id="s51" aline= "a132">					break;</span>
+<button>&nbsp;&nbsp;52</button> <span id="s52" aline= "">				}</span>
+<button>&nbsp;&nbsp;53</button> <span id="s53" aline= "">			case 2:</span>
+<button>&nbsp;&nbsp;54</button> <span id="s54" aline= "">				{</span>
+<button onclick="sclick('s55','a142')">&nbsp;&nbsp;55</button> <span id="s55" aline= "a142 a143 a144">					printf("\nEnter the element");</span>
+<button onclick="sclick('s56','a145')">&nbsp;&nbsp;56</button> <span id="s56" aline= "a145 a146 a147 a148">					scanf("%d",&ele);</span>
+<button onclick="sclick('s57','a149')">&nbsp;&nbsp;57</button> <span id="s57" aline= "a149 a150 a151">					Einsert(ele,head);</span>
+<button onclick="sclick('s58','a152')">&nbsp;&nbsp;58</button> <span id="s58" aline= "a152">					break;</span>
+<button>&nbsp;&nbsp;59</button> <span id="s59" aline= "">				}</span>
+<button>&nbsp;&nbsp;60</button> <span id="s60" aline= "">			case 3:</span>
+<button>&nbsp;&nbsp;61</button> <span id="s61" aline= "">				{</span>
+<button onclick="sclick('s62','a153')">&nbsp;&nbsp;62</button> <span id="s62" aline= "a153 a154 a155">					printf("\nEnter the element");</span>
+<button onclick="sclick('s63','a156')">&nbsp;&nbsp;63</button> <span id="s63" aline= "a156 a157 a158 a159">					scanf("%d",&ele);</span>
+<button onclick="sclick('s64','a160')">&nbsp;&nbsp;64</button> <span id="s64" aline= "a160 a161">					Minsert(ele);</span>
+<button onclick="sclick('s65','a162')">&nbsp;&nbsp;65</button> <span id="s65" aline= "a162">					break;</span>
+<button>&nbsp;&nbsp;66</button> <span id="s66" aline= "">				}</span>
+<button>&nbsp;&nbsp;67</button> <span id="s67" aline= "">			case 4:</span>
+<button>&nbsp;&nbsp;68</button> <span id="s68" aline= "">				{</span>
+<button onclick="sclick('s69','a163')">&nbsp;&nbsp;69</button> <span id="s69" aline= "a163 a164 a165">					printf("\nEnter the LL(1/2)");</span>
+<button onclick="sclick('s70','a166')">&nbsp;&nbsp;70</button> <span id="s70" aline= "a166 a167 a168 a169">					scanf("%d",&ele);</span>
+<button onclick="sclick('s71','a170')">&nbsp;&nbsp;71</button> <span id="s71" aline= "a170 a171">					if(ele==1)</span>
+<button onclick="sclick('s72','a175')">&nbsp;&nbsp;72</button> <span id="s72" aline= "a175 a176 a177">						Display(head);</span>
+<button>&nbsp;&nbsp;73</button> <span id="s73" aline= "">					else</span>
+<button onclick="sclick('s74','a172')">&nbsp;&nbsp;74</button> <span id="s74" aline= "a172 a173 a174">						Display(head2);</span>
+<button>&nbsp;&nbsp;75</button> <span id="s75" aline= "">					break;</span>
+<button>&nbsp;&nbsp;76</button> <span id="s76" aline= "">				}</span>
+<button>&nbsp;&nbsp;77</button> <span id="s77" aline= "">			case 5:</span>
+<button>&nbsp;&nbsp;78</button> <span id="s78" aline= "">				{</span>
+<button onclick="sclick('s79','a178')">&nbsp;&nbsp;79</button> <span id="s79" aline= "a178 a179">					Bdelete();</span>
+<button onclick="sclick('s80','a180')">&nbsp;&nbsp;80</button> <span id="s80" aline= "a180">					break;</span>
+<button>&nbsp;&nbsp;81</button> <span id="s81" aline= "">				}</span>
+<button>&nbsp;&nbsp;82</button> <span id="s82" aline= "">			case 6:</span>
+<button>&nbsp;&nbsp;83</button> <span id="s83" aline= "">				{</span>
+<button onclick="sclick('s84','a181')">&nbsp;&nbsp;84</button> <span id="s84" aline= "a181 a182">					Edelete();</span>
+<button onclick="sclick('s85','a183')">&nbsp;&nbsp;85</button> <span id="s85" aline= "a183">					break;</span>
+<button>&nbsp;&nbsp;86</button> <span id="s86" aline= "">				}</span>
+<button>&nbsp;&nbsp;87</button> <span id="s87" aline= "">			case 7:</span>
+<button>&nbsp;&nbsp;88</button> <span id="s88" aline= "">				{</span>
+<button onclick="sclick('s89','a184')">&nbsp;&nbsp;89</button> <span id="s89" aline= "a184 a185 a186">					printf("\nEnter the element you wanna delete:");</span>
+<button onclick="sclick('s90','a187')">&nbsp;&nbsp;90</button> <span id="s90" aline= "a187 a188 a189 a190">					scanf("%d",&ele);</span>
+<button onclick="sclick('s91','a191')">&nbsp;&nbsp;91</button> <span id="s91" aline= "a191 a192">					Mdelete(ele);</span>
+<button onclick="sclick('s92','a193')">&nbsp;&nbsp;92</button> <span id="s92" aline= "a193">					break;</span>
+<button>&nbsp;&nbsp;93</button> <span id="s93" aline= "">				}</span>
+<button>&nbsp;&nbsp;94</button> <span id="s94" aline= "">			/*case 8:</span>
+<button>&nbsp;&nbsp;95</button> <span id="s95" aline= "">				{</span>
+<button>&nbsp;&nbsp;96</button> <span id="s96" aline= "">					copy();</span>
+<button>&nbsp;&nbsp;97</button> <span id="s97" aline= "">					break;</span>
+<button>&nbsp;&nbsp;98</button> <span id="s98" aline= "">				}</span>
+<button>&nbsp;&nbsp;99</button> <span id="s99" aline= "">			case 9:</span>
+<button>&nbsp;&nbsp;100</button> <span id="s100" aline= "">				{</span>
+<button>&nbsp;&nbsp;101</button> <span id="s101" aline= "">					printf("\nEnter the LL(1/2)");</span>
+<button>&nbsp;&nbsp;102</button> <span id="s102" aline= "">					scanf("%d",&ele);</span>
+<button>&nbsp;&nbsp;103</button> <span id="s103" aline= "">					if(ele==1)</span>
+<button>&nbsp;&nbsp;104</button> <span id="s104" aline= "">						DeleteLL(head);</span>
+<button>&nbsp;&nbsp;105</button> <span id="s105" aline= "">					else</span>
+<button>&nbsp;&nbsp;106</button> <span id="s106" aline= "">						DeleteLL(head2);</span>
+<button>&nbsp;&nbsp;107</button> <span id="s107" aline= "">					break;</span>
+<button>&nbsp;&nbsp;108</button> <span id="s108" aline= "">				}</span>
+<button>&nbsp;&nbsp;109</button> <span id="s109" aline= "">			case 10:</span>
+<button>&nbsp;&nbsp;110</button> <span id="s110" aline= "">				{</span>
+<button>&nbsp;&nbsp;111</button> <span id="s111" aline= "">					reverse(head);</span>
+<button>&nbsp;&nbsp;112</button> <span id="s112" aline= "">					break;</span>
+<button>&nbsp;&nbsp;113</button> <span id="s113" aline= "">				}</span>
+<button>&nbsp;&nbsp;114</button> <span id="s114" aline= "">			case 11:</span>
+<button>&nbsp;&nbsp;115</button> <span id="s115" aline= "">				{</span>
+<button>&nbsp;&nbsp;116</button> <span id="s116" aline= "">					swaplink(head);	</span>
+<button>&nbsp;&nbsp;117</button> <span id="s117" aline= "">				}</span>
+<button>&nbsp;&nbsp;118</button> <span id="s118" aline=""></span>
+<button>&nbsp;&nbsp;119</button> <span id="s119" aline= "">			case 12:</span>
+<button>&nbsp;&nbsp;120</button> <span id="s120" aline= "">				{</span>
+<button>&nbsp;&nbsp;121</button> <span id="s121" aline= "">					exit(0);</span>
+<button>&nbsp;&nbsp;122</button> <span id="s122" aline= "">				}*/</span>
+<button>&nbsp;&nbsp;123</button> <span id="s123" aline= "">		}</span>
+<button>&nbsp;&nbsp;124</button> <span id="s124" aline= "">	}</span>
+<button>&nbsp;&nbsp;125</button> <span id="s125" aline= "">	return 0;</span>
+<button>&nbsp;&nbsp;126</button> <span id="s126" aline= "">}</span>
+<button>&nbsp;&nbsp;127</button> <span id="s127" aline=""></span>
+<button>&nbsp;&nbsp;128</button> <span id="s128" aline= "">void Binsert(int ele)</span>
+<button onclick="sclick('s129','a1')">&nbsp;&nbsp;129</button> <span id="s129" aline= "a1 a2 a3 a4">{</span>
+<button>&nbsp;&nbsp;130</button> <span id="s130" aline= "">//	if (head==NULL)</span>
+<button>&nbsp;&nbsp;131</button> <span id="s131" aline= "">//		return;</span>
+<button onclick="sclick('s132','a5')">&nbsp;&nbsp;132</button> <span id="s132" aline= "a5">	node* p=head;</span>
+<button onclick="sclick('s133','a6')">&nbsp;&nbsp;133</button> <span id="s133" aline= "a6 a7">	node* temp=(node*)malloc(sizeof(node));</span>
+<button onclick="sclick('s134','a8')">&nbsp;&nbsp;134</button> <span id="s134" aline= "a8">	temp-&gt;info=ele;</span>
+<button onclick="sclick('s135','a9')">&nbsp;&nbsp;135</button> <span id="s135" aline= "a9">	temp-&gt;link=head;</span>
+<button onclick="sclick('s136','a10')">&nbsp;&nbsp;136</button> <span id="s136" aline= "a10">	head=temp;</span>
+<button onclick="sclick('s137','a11')">&nbsp;&nbsp;137</button> <span id="s137" aline= "a11 a13 a14 a12">}</span>
+<button>&nbsp;&nbsp;138</button> <span id="s138" aline=""></span>
+<button>&nbsp;&nbsp;139</button> <span id="s139" aline= "">void Einsert(int ele,node* temph)</span>
+<button onclick="sclick('s140','a15')">&nbsp;&nbsp;140</button> <span id="s140" aline= "a15 a16 a17 a18 a19">{</span>
+<button onclick="sclick('s141','a20')">&nbsp;&nbsp;141</button> <span id="s141" aline= "a20 a21">	node* temp=(node*)malloc(sizeof(node));</span>
+<button onclick="sclick('s142','a22')">&nbsp;&nbsp;142</button> <span id="s142" aline= "a22">	temp-&gt;info=ele;</span>
+<button onclick="sclick('s143','a23')">&nbsp;&nbsp;143</button> <span id="s143" aline= "a23">	node* p;</span>
+<button onclick="sclick('s144','a23')">&nbsp;&nbsp;144</button> <span id="s144" aline= "a23">	p=temph;</span>
+<button onclick="sclick('s145','a23')">&nbsp;&nbsp;145</button> <span id="s145" aline= "a23 a24 a25 a26">	while(p-&gt;link!=NULL)</span>
+<button>&nbsp;&nbsp;146</button> <span id="s146" aline= "">		p=p-&gt;link;</span>
+<button onclick="sclick('s147','a27')">&nbsp;&nbsp;147</button> <span id="s147" aline= "a27 a28">	temp-&gt;link=NULL;</span>
+<button onclick="sclick('s148','a29')">&nbsp;&nbsp;148</button> <span id="s148" aline= "a29">	p-&gt;link=temp;</span>
+<button onclick="sclick('s149','a30')">&nbsp;&nbsp;149</button> <span id="s149" aline= "a30 a33 a31 a32">}</span>
+<button>&nbsp;&nbsp;150</button> <span id="s150" aline=""></span>
+<button>&nbsp;&nbsp;151</button> <span id="s151" aline= "">void Minsert(int ele)</span>
+<button onclick="sclick('s152','a34')">&nbsp;&nbsp;152</button> <span id="s152" aline= "a34 a35 a36 a37">{</span>
+<button onclick="sclick('s153','a38')">&nbsp;&nbsp;153</button> <span id="s153" aline= "a38 a39 a40">	if(head==NULL)</span>
+<button>&nbsp;&nbsp;154</button> <span id="s154" aline= "">	{</span>
+<button onclick="sclick('s155','a60')">&nbsp;&nbsp;155</button> <span id="s155" aline= "a60">		Binsert(ele);</span>
+<button onclick="sclick('s156','a61')">&nbsp;&nbsp;156</button> <span id="s156" aline= "a61">		return;</span>
+<button>&nbsp;&nbsp;157</button> <span id="s157" aline= "">	}</span>
+<button onclick="sclick('s158','a41')">&nbsp;&nbsp;158</button> <span id="s158" aline= "a41 a42">	if (head-&gt;info&gt;ele)</span>
+<button>&nbsp;&nbsp;159</button> <span id="s159" aline= "">	{</span>
+<button onclick="sclick('s160','a62')">&nbsp;&nbsp;160</button> <span id="s160" aline= "a62">		Binsert(ele);</span>
+<button onclick="sclick('s161','a63')">&nbsp;&nbsp;161</button> <span id="s161" aline= "a63">		return;</span>
+<button>&nbsp;&nbsp;162</button> <span id="s162" aline= "">	}	</span>
+<button onclick="sclick('s163','a43')">&nbsp;&nbsp;163</button> <span id="s163" aline= "a43 a44">	node *p,*q,*temp=(node*)malloc(sizeof(node));</span>
+<button onclick="sclick('s164','a45')">&nbsp;&nbsp;164</button> <span id="s164" aline= "a45">	temp-&gt;info=ele;</span>
+<button onclick="sclick('s165','a46')">&nbsp;&nbsp;165</button> <span id="s165" aline= "a46 a49">	p=head;</span>
+<button onclick="sclick('s166','a46')">&nbsp;&nbsp;166</button> <span id="s166" aline= "a46">	q=head-&gt;link;</span>
+<button onclick="sclick('s167','a47')">&nbsp;&nbsp;167</button> <span id="s167" aline= "a47 a54 a48 a55">	while(q!=NULL)											//q-&gt;link!=null?????????????????????????????????????????? works??????????????????????????????????</span>
+<button>&nbsp;&nbsp;168</button> <span id="s168" aline= "">	{</span>
+<button onclick="sclick('s169','a50')">&nbsp;&nbsp;169</button> <span id="s169" aline= "a50 a51">		if(q-&gt;info&gt;=ele)</span>
+<button>&nbsp;&nbsp;170</button> <span id="s170" aline= "">		{</span>
+<button onclick="sclick('s171','a67')">&nbsp;&nbsp;171</button> <span id="s171" aline= "a67">			p-&gt;link=temp;</span>
+<button onclick="sclick('s172','a68')">&nbsp;&nbsp;172</button> <span id="s172" aline= "a68">			temp-&gt;link=q;</span>
+<button onclick="sclick('s173','a69')">&nbsp;&nbsp;173</button> <span id="s173" aline= "a69">			return;</span>
+<button>&nbsp;&nbsp;174</button> <span id="s174" aline= "">		}		</span>
+<button onclick="sclick('s175','a52')">&nbsp;&nbsp;175</button> <span id="s175" aline= "a52">		p=p-&gt;link;</span>
+<button onclick="sclick('s176','a53')">&nbsp;&nbsp;176</button> <span id="s176" aline= "a53">		q=q-&gt;link;</span>
+<button>&nbsp;&nbsp;177</button> <span id="s177" aline= "">	}</span>
+<button onclick="sclick('s178','a56')">&nbsp;&nbsp;178</button> <span id="s178" aline= "a56 a59 a57 a58">	Einsert(ele,head);</span>
+<button onclick="sclick('s179','a63')">&nbsp;&nbsp;179</button> <span id="s179" aline= "a63 a65 a64 a66">}</span>
+<button>&nbsp;&nbsp;180</button> <span id="s180" aline=""></span>
+<button>&nbsp;&nbsp;181</button> <span id="s181" aline= "">void Display(node* temph)</span>
+<button onclick="sclick('s182','a70')">&nbsp;&nbsp;182</button> <span id="s182" aline= "a70 a71">{</span>
+<button onclick="sclick('s183','a72')">&nbsp;&nbsp;183</button> <span id="s183" aline= "a72">	node* p=temph;</span>
+<button onclick="sclick('s184','a72')">&nbsp;&nbsp;184</button> <span id="s184" aline= "a72 a79 a73 a80">	while(p!=NULL)</span>
+<button>&nbsp;&nbsp;185</button> <span id="s185" aline= "">	{</span>
+<button onclick="sclick('s186','a74')">&nbsp;&nbsp;186</button> <span id="s186" aline= "a74 a75 a76 a77">		printf("%d-&gt;",p-&gt;info);</span>
+<button onclick="sclick('s187','a78')">&nbsp;&nbsp;187</button> <span id="s187" aline= "a78">		p=p-&gt;link;</span>
+<button>&nbsp;&nbsp;188</button> <span id="s188" aline= "">	}</span>
+<button onclick="sclick('s189','a81')">&nbsp;&nbsp;189</button> <span id="s189" aline= "a81 a82">	printf("\n");</span>
+<button onclick="sclick('s190','a83')">&nbsp;&nbsp;190</button> <span id="s190" aline= "a83 a84">}				</span>
+<button>&nbsp;&nbsp;191</button> <span id="s191" aline= "">				</span>
+<button>&nbsp;&nbsp;192</button> <span id="s192" aline= "">void Bdelete()</span>
+<button onclick="sclick('s193','a85')">&nbsp;&nbsp;193</button> <span id="s193" aline= "a85">{</span>
+<button onclick="sclick('s194','a86')">&nbsp;&nbsp;194</button> <span id="s194" aline= "a86">	node* p=head;</span>
+<button onclick="sclick('s195','a87')">&nbsp;&nbsp;195</button> <span id="s195" aline= "a87 a88">	head=head-&gt;link;</span>
+<button onclick="sclick('s196','a89')">&nbsp;&nbsp;196</button> <span id="s196" aline= "a89">	free(p);</span>
+<button onclick="sclick('s197','a90')">&nbsp;&nbsp;197</button> <span id="s197" aline= "a90 a91">}</span>
+<button>&nbsp;&nbsp;198</button> <span id="s198" aline=""></span>
+<button>&nbsp;&nbsp;199</button> <span id="s199" aline= "">void Edelete()</span>
+<button onclick="sclick('s200','a92')">&nbsp;&nbsp;200</button> <span id="s200" aline= "a92">{</span>
+<button onclick="sclick('s201','a93')">&nbsp;&nbsp;201</button> <span id="s201" aline= "a93">	node *p,*q;</span>
+<button onclick="sclick('s202','a93')">&nbsp;&nbsp;202</button> <span id="s202" aline= "a93">	p=head;</span>
+<button onclick="sclick('s203','a94')">&nbsp;&nbsp;203</button> <span id="s203" aline= "a94 a95 a96 a97">	while(p-&gt;link-&gt;link!=NULL)</span>
+<button>&nbsp;&nbsp;204</button> <span id="s204" aline= "">		p=p-&gt;link;</span>
+<button onclick="sclick('s205','a98')">&nbsp;&nbsp;205</button> <span id="s205" aline= "a98">	q=p-&gt;link;</span>
+<button onclick="sclick('s206','a98')">&nbsp;&nbsp;206</button> <span id="s206" aline= "a98 a99">	p-&gt;link=NULL;</span>
+<button onclick="sclick('s207','a100')">&nbsp;&nbsp;207</button> <span id="s207" aline= "a100">	free(q);</span>
+<button onclick="sclick('s208','a101')">&nbsp;&nbsp;208</button> <span id="s208" aline= "a101 a102">}</span>
+<button>&nbsp;&nbsp;209</button> <span id="s209" aline=""></span>
+<button>&nbsp;&nbsp;210</button> <span id="s210" aline= "">void Mdelete(int ele)</span>
+<button onclick="sclick('s211','a103')">&nbsp;&nbsp;211</button> <span id="s211" aline= "a103">{</span>
+<button onclick="sclick('s212','a104')">&nbsp;&nbsp;212</button> <span id="s212" aline= "a104 a105 a106">	if (head-&gt;info==ele)</span>
+<button>&nbsp;&nbsp;213</button> <span id="s213" aline= "">	{</span>
+<button onclick="sclick('s214','a118')">&nbsp;&nbsp;214</button> <span id="s214" aline= "a118 a119">		Bdelete();</span>
+<button onclick="sclick('s215','a120')">&nbsp;&nbsp;215</button> <span id="s215" aline= "a120">		return;</span>
+<button>&nbsp;&nbsp;216</button> <span id="s216" aline= "">	}</span>
+<button onclick="sclick('s217','a107')">&nbsp;&nbsp;217</button> <span id="s217" aline= "a107">	node *p=head,*q=head-&gt;link;</span>
+<button onclick="sclick('s218','a108')">&nbsp;&nbsp;218</button> <span id="s218" aline= "a108 a109 a110">	while(q-&gt;link!=NULL)										//q-&gt;link!=null?????????????????????????????????????????? doesnt work </span>
+<button>&nbsp;&nbsp;219</button> <span id="s219" aline= "">	{</span>
+<button onclick="sclick('s220','a111')">&nbsp;&nbsp;220</button> <span id="s220" aline= "a111 a112">		if(q-&gt;info==ele)</span>
+<button>&nbsp;&nbsp;221</button> <span id="s221" aline= "">		{</span>
+<button onclick="sclick('s222','a113')">&nbsp;&nbsp;222</button> <span id="s222" aline= "a113">			p-&gt;link=q-&gt;link;</span>
+<button onclick="sclick('s223','a114')">&nbsp;&nbsp;223</button> <span id="s223" aline= "a114 a115">			free(q);</span>
+<button onclick="sclick('s224','a116')">&nbsp;&nbsp;224</button> <span id="s224" aline= "a116">			return;</span>
+<button>&nbsp;&nbsp;225</button> <span id="s225" aline= "">		}</span>
+<button>&nbsp;&nbsp;226</button> <span id="s226" aline= "">	}</span>
+<button onclick="sclick('s227','a116')">&nbsp;&nbsp;227</button> <span id="s227" aline= "a116 a117">}</span>
+<button>&nbsp;&nbsp;228</button> <span id="s228" aline=""></span>
+<button>&nbsp;&nbsp;229</button> <span id="s229" aline= "">void DeleteLL(node* temph)</span>
+<button onclick="sclick('s230','a194')">&nbsp;&nbsp;230</button> <span id="s230" aline= "a194">{</span>
+<button onclick="sclick('s231','a195')">&nbsp;&nbsp;231</button> <span id="s231" aline= "a195">	node *p=temph,*q=temph-&gt;link;</span>
+<button onclick="sclick('s232','a196')">&nbsp;&nbsp;232</button> <span id="s232" aline= "a196 a201 a197 a202">	while(q!=NULL)</span>
+<button>&nbsp;&nbsp;233</button> <span id="s233" aline= "">	{</span>
+<button onclick="sclick('s234','a198')">&nbsp;&nbsp;234</button> <span id="s234" aline= "a198">		free(p);</span>
+<button onclick="sclick('s235','a199')">&nbsp;&nbsp;235</button> <span id="s235" aline= "a199">		p=q;</span>
+<button onclick="sclick('s236','a199')">&nbsp;&nbsp;236</button> <span id="s236" aline= "a199 a200">		q=q-&gt;link;</span>
+<button>&nbsp;&nbsp;237</button> <span id="s237" aline= "">	}</span>
+<button onclick="sclick('s238','a203')">&nbsp;&nbsp;238</button> <span id="s238" aline= "a203">	free(p);</span>
+<button onclick="sclick('s239','a204')">&nbsp;&nbsp;239</button> <span id="s239" aline= "a204">	temph=NULL;</span>
+<button onclick="sclick('s240','a204')">&nbsp;&nbsp;240</button> <span id="s240" aline= "a204 a205">}</span>
+<button>&nbsp;&nbsp;241</button> <span id="s241" aline=""></span>
+<button>&nbsp;&nbsp;242</button> <span id="s242" aline= "">void copy()</span>
+<button onclick="sclick('s243','a206')">&nbsp;&nbsp;243</button> <span id="s243" aline= "a206">{</span>
+<button onclick="sclick('s244','a207')">&nbsp;&nbsp;244</button> <span id="s244" aline= "a207 a208">	DeleteLL(head2);</span>
+<button onclick="sclick('s245','a209')">&nbsp;&nbsp;245</button> <span id="s245" aline= "a209">	node *p,*q;</span>
+<button onclick="sclick('s246','a209')">&nbsp;&nbsp;246</button> <span id="s246" aline= "a209">	p=head;</span>
+<button onclick="sclick('s247','a210')">&nbsp;&nbsp;247</button> <span id="s247" aline= "a210">	q=head2;</span>
+<button onclick="sclick('s248','a210')">&nbsp;&nbsp;248</button> <span id="s248" aline= "a210 a215 a211">	while(p!=NULL)</span>
+<button onclick="sclick('s249','a212')">&nbsp;&nbsp;249</button> <span id="s249" aline= "a212 a213 a214">		Einsert(p-&gt;info,head2);</span>
+<button onclick="sclick('s250','a216')">&nbsp;&nbsp;250</button> <span id="s250" aline= "a216 a217">}</span>
+<button>&nbsp;&nbsp;251</button> <span id="s251" aline=""></span>
+<button>&nbsp;&nbsp;252</button> <span id="s252" aline= "">node* locate(node* head, int ind)</span>
+<button onclick="sclick('s253','a218')">&nbsp;&nbsp;253</button> <span id="s253" aline= "a218">{</span>
+<button onclick="sclick('s254','a218')">&nbsp;&nbsp;254</button> <span id="s254" aline= "a218">	node *p;</span>
+<button onclick="sclick('s255','a218')">&nbsp;&nbsp;255</button> <span id="s255" aline= "a218">	int x;</span>
+<button onclick="sclick('s256','a218')">&nbsp;&nbsp;256</button> <span id="s256" aline= "a218">	p= head-&gt;link;</span>
+<button onclick="sclick('s257','a219')">&nbsp;&nbsp;257</button> <span id="s257" aline= "a219 a223">	x=0;</span>
+<button onclick="sclick('s258','a219')">&nbsp;&nbsp;258</button> <span id="s258" aline= "a219 a226 a220 a221 a222 a227 a228 a229">	while(x!=ind||p!=NULL)</span>
+<button>&nbsp;&nbsp;259</button> <span id="s259" aline= "">	{</span>
+<button onclick="sclick('s260','a224')">&nbsp;&nbsp;260</button> <span id="s260" aline= "a224">		p=p-&gt;link;</span>
+<button onclick="sclick('s261','a225')">&nbsp;&nbsp;261</button> <span id="s261" aline= "a225">		x++;</span>
+<button>&nbsp;&nbsp;262</button> <span id="s262" aline= "">	}</span>
+<button onclick="sclick('s263','a230')">&nbsp;&nbsp;263</button> <span id="s263" aline= "a230">	return p;</span>
+<button onclick="sclick('s264','a230')">&nbsp;&nbsp;264</button> <span id="s264" aline= "a230 a a231 a232 a233 a234 a235">}</span>
+<button>&nbsp;&nbsp;265</button> <span id="s265" aline= "">/*</span>
+<button>&nbsp;&nbsp;266</button> <span id="s266" aline= "">void reverse(node* head)</span>
+<button>&nbsp;&nbsp;267</button> <span id="s267" aline= "">{	</span>
+<button>&nbsp;&nbsp;268</button> <span id="s268" aline= "">	printf("111111111111111111111111111111111111");</span>
+<button>&nbsp;&nbsp;269</button> <span id="s269" aline= "">	node *x = head, *p, *q; </span>
+<button>&nbsp;&nbsp;270</button> <span id="s270" aline= "">	int n=0, temp=0,i;</span>
+<button>&nbsp;&nbsp;271</button> <span id="s271" aline= "">	for (i=0;x!=NULL;i++)</span>
+<button>&nbsp;&nbsp;272</button> <span id="s272" aline= "">		n++;</span>
+<button>&nbsp;&nbsp;273</button> <span id="s273" aline= "">	printf("222222222222222222222222222222222222");</span>
+<button>&nbsp;&nbsp;274</button> <span id="s274" aline= "">	for(i=0;i&lt;n/2;i++)</span>
+<button>&nbsp;&nbsp;275</button> <span id="s275" aline= "">	{</span>
+<button>&nbsp;&nbsp;276</button> <span id="s276" aline= "">		p=locate(head,i);</span>
+<button>&nbsp;&nbsp;277</button> <span id="s277" aline= "">		q=locate(head,n/2-i);</span>
+<button>&nbsp;&nbsp;278</button> <span id="s278" aline= "">	printf("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");</span>
+<button>&nbsp;&nbsp;279</button> <span id="s279" aline= "">		temp = p-&gt;info;</span>
+<button>&nbsp;&nbsp;280</button> <span id="s280" aline= "">		p-&gt;info=q-&gt;info;</span>
+<button>&nbsp;&nbsp;281</button> <span id="s281" aline= "">		q-&gt;info = temp;//mind fucked</span>
+<button>&nbsp;&nbsp;282</button> <span id="s282" aline= "">	}</span>
+<button>&nbsp;&nbsp;283</button> <span id="s283" aline= "">}</span>
+<button>&nbsp;&nbsp;284</button> <span id="s284" aline= "">	</span>
+<button>&nbsp;&nbsp;285</button> <span id="s285" aline= "">				</span>
+<button>&nbsp;&nbsp;286</button> <span id="s286" aline= "">void swaplink(node* head)</span>
+<button>&nbsp;&nbsp;287</button> <span id="s287" aline= "">{</span>
+<button>&nbsp;&nbsp;288</button> <span id="s288" aline= "">	node *p,*q;</span>
+<button>&nbsp;&nbsp;289</button> <span id="s289" aline= "">	q=head;</span>
+<button>&nbsp;&nbsp;290</button> <span id="s290" aline= "">	int leng=len(head);</span>
+<button>&nbsp;&nbsp;291</button> <span id="s291" aline= "">	int count=leng-1,i,n=0;</span>
+<button>&nbsp;&nbsp;292</button> <span id="s292" aline= "">	for(i=0;i&lt;leng-1;i++)</span>
+<button>&nbsp;&nbsp;293</button> <span id="s293" aline= "">	{				{</span>
+<button>&nbsp;&nbsp;294</button> <span id="s294" aline= "">		while( n&lt;count)</span>
+<button>&nbsp;&nbsp;295</button> <span id="s295" aline= "">		{</span>
+<button>&nbsp;&nbsp;296</button> <span id="s296" aline= "">			p=q;</span>
+<button>&nbsp;&nbsp;297</button> <span id="s297" aline= "">			q=q-&gt;link;</span>
+<button>&nbsp;&nbsp;298</button> <span id="s298" aline= "">		}</span>
+<button>&nbsp;&nbsp;299</button> <span id="s299" aline= "">		q-&gt;link=p;</span>
+<button>&nbsp;&nbsp;300</button> <span id="s300" aline= "">		n++;</span>
+<button>&nbsp;&nbsp;301</button> <span id="s301" aline= "">	}</span>
+<button>&nbsp;&nbsp;302</button> <span id="s302" aline= "">}</span>
+<button>&nbsp;&nbsp;303</button> <span id="s303" aline=""></span>
+<button>&nbsp;&nbsp;304</button> <span id="s304" aline= "">int len(node* head)</span>
+<button>&nbsp;&nbsp;305</button> <span id="s305" aline= "">{</span>
+<button>&nbsp;&nbsp;306</button> <span id="s306" aline= "">	node* p=head;</span>
+<button>&nbsp;&nbsp;307</button> <span id="s307" aline= "">	int x=1;</span>
+<button>&nbsp;&nbsp;308</button> <span id="s308" aline= "">	while (p-&gt;link!=NULL)</span>
+<button>&nbsp;&nbsp;309</button> <span id="s309" aline= "">	{</span>
+<button>&nbsp;&nbsp;310</button> <span id="s310" aline= "">		p=p-&gt;link;</span>
+<button>&nbsp;&nbsp;311</button> <span id="s311" aline= "">		x++;</span>
+<button>&nbsp;&nbsp;312</button> <span id="s312" aline= "">	}</span>
+<button>&nbsp;&nbsp;313</button> <span id="s313" aline= "">	return x;</span>
+<button>&nbsp;&nbsp;314</button> <span id="s314" aline= "">}</span>
+<button>&nbsp;&nbsp;315</button> <span id="s315" aline= "">				</span>
+<button>&nbsp;&nbsp;316</button> <span id="s316" aline= "">				</span>
+<button>&nbsp;&nbsp;317</button> <span id="s317" aline= "">				</span>
+<button>&nbsp;&nbsp;318</button> <span id="s318" aline= "">		*/		</span>
+<button>&nbsp;&nbsp;319</button> <span id="s319" aline= "">					</span>
+<button>&nbsp;&nbsp;320</button> <span id="s320" aline= "">				</span>
+<button>&nbsp;&nbsp;321</button> <span id="s321" aline= "">				</span>
+<button>&nbsp;&nbsp;322</button> <span id="s322" aline= "">				</span>
+<button>&nbsp;&nbsp;323</button> <span id="s323" aline= "">				</span>
+</div>
+</td>
+<td width="49%">
+<h2>assembly</h2>
+<div id="assembly">
+0000000000401176 &lt;Binsert&gt;:
+<button onclick="aclick('a1','s129')">401176</button><span id="a1" sline= "s129">	55                   	push   %rbp</span>
+<button onclick="aclick('a2','s129')">401177</button><span id="a2" sline= "s129">	53                   	push   %rbx</span>
+<button onclick="aclick('a3','s129')">401178</button><span id="a3" sline= "s129">	48 83 ec 08          	sub    $0x8,%rsp</span>
+<button onclick="aclick('a4','s129')">40117c</button><span id="a4" sline= "s129">	89 fb                	mov    %edi,%ebx</span>
+<button onclick="aclick('a5','s132')">40117e</button><span id="a5" sline= "s132">	48 8b 2d db 2e 00 00 	mov    0x2edb(%rip),%rbp        # 404060 &lt;head&gt;</span>
+<button onclick="aclick('a6','s133')">401185</button><span id="a6" sline= "s133">	bf 10 00 00 00       	mov    $0x10,%edi</span>
+<button onclick="aclick('a7','s133')">40118a</button><span id="a7" sline= "s133">	e8 e1 fe ff ff       	call   401070 &lt;malloc@plt&gt;</span>
+<button onclick="aclick('a8','s134')">40118f</button><span id="a8" sline= "s134">	89 18                	mov    %ebx,(%rax)</span>
+<button onclick="aclick('a9','s135')">401191</button><span id="a9" sline= "s135">	48 89 68 08          	mov    %rbp,0x8(%rax)</span>
+<button onclick="aclick('a10','s136')">401195</button><span id="a10" sline= "s136">	48 89 05 c4 2e 00 00 	mov    %rax,0x2ec4(%rip)        # 404060 &lt;head&gt;</span>
+<button onclick="aclick('a11','s137')">40119c</button><span id="a11" sline= "s137">	48 83 c4 08          	add    $0x8,%rsp</span>
+<button onclick="aclick('a12','s137')">4011a0</button><span id="a12" sline= "s137">	5b                   	pop    %rbx</span>
+<button onclick="aclick('a13','s137')">4011a1</button><span id="a13" sline= "s137">	5d                   	pop    %rbp</span>
+<button onclick="aclick('a14','s137')">4011a2</button><span id="a14" sline= "s137">	c3                   	ret    </span>
+
+00000000004011a3 &lt;Einsert&gt;:
+<button onclick="aclick('a15','s140')">4011a3</button><span id="a15" sline= "s140">	55                   	push   %rbp</span>
+<button onclick="aclick('a16','s140')">4011a4</button><span id="a16" sline= "s140">	53                   	push   %rbx</span>
+<button onclick="aclick('a17','s140')">4011a5</button><span id="a17" sline= "s140">	48 83 ec 08          	sub    $0x8,%rsp</span>
+<button onclick="aclick('a18','s140')">4011a9</button><span id="a18" sline= "s140">	89 fd                	mov    %edi,%ebp</span>
+<button onclick="aclick('a19','s140')">4011ab</button><span id="a19" sline= "s140">	48 89 f3             	mov    %rsi,%rbx</span>
+<button onclick="aclick('a20','s141')">4011ae</button><span id="a20" sline= "s141">	bf 10 00 00 00       	mov    $0x10,%edi</span>
+<button onclick="aclick('a21','s141')">4011b3</button><span id="a21" sline= "s141">	e8 b8 fe ff ff       	call   401070 &lt;malloc@plt&gt;</span>
+<button onclick="aclick('a22','s142')">4011b8</button><span id="a22" sline= "s142">	89 28                	mov    %ebp,(%rax)</span>
+<button onclick="aclick('a23','s143')">4011ba</button><span id="a23" sline= "s143 s144 s145">	48 89 da             	mov    %rbx,%rdx</span>
+<button onclick="aclick('a24','s145')">4011bd</button><span id="a24" sline= "s145">	48 8b 5b 08          	mov    0x8(%rbx),%rbx</span>
+<button onclick="aclick('a25','s145')">4011c1</button><span id="a25" sline= "s145">	48 85 db             	test   %rbx,%rbx</span>
+<button onclick="aclick('a26','s145')">4011c4</button><span id="a26" sline= "s145">	75 f4                	jne    4011ba &lt;Einsert+0x17&gt;</span>
+<button onclick="aclick('a27','s147')">4011c6</button><span id="a27" sline= "s147">	48 c7 40 08 00 00 00 	movq   $0x0,0x8(%rax)</span>
+<button onclick="aclick('a28','s147')">4011cd</button><span id="a28" sline= "s147">	00 </span>
+<button onclick="aclick('a29','s148')">4011ce</button><span id="a29" sline= "s148">	48 89 42 08          	mov    %rax,0x8(%rdx)</span>
+<button onclick="aclick('a30','s149')">4011d2</button><span id="a30" sline= "s149">	48 83 c4 08          	add    $0x8,%rsp</span>
+<button onclick="aclick('a31','s149')">4011d6</button><span id="a31" sline= "s149">	5b                   	pop    %rbx</span>
+<button onclick="aclick('a32','s149')">4011d7</button><span id="a32" sline= "s149">	5d                   	pop    %rbp</span>
+<button onclick="aclick('a33','s149')">4011d8</button><span id="a33" sline= "s149">	c3                   	ret    </span>
+
+00000000004011d9 &lt;Minsert&gt;:
+<button onclick="aclick('a34','s152')">4011d9</button><span id="a34" sline= "s152">	55                   	push   %rbp</span>
+<button onclick="aclick('a35','s152')">4011da</button><span id="a35" sline= "s152">	53                   	push   %rbx</span>
+<button onclick="aclick('a36','s152')">4011db</button><span id="a36" sline= "s152">	48 83 ec 08          	sub    $0x8,%rsp</span>
+<button onclick="aclick('a37','s152')">4011df</button><span id="a37" sline= "s152">	89 fb                	mov    %edi,%ebx</span>
+<button onclick="aclick('a38','s153')">4011e1</button><span id="a38" sline= "s153">	48 8b 2d 78 2e 00 00 	mov    0x2e78(%rip),%rbp        # 404060 &lt;head&gt;</span>
+<button onclick="aclick('a39','s153')">4011e8</button><span id="a39" sline= "s153">	48 85 ed             	test   %rbp,%rbp</span>
+<button onclick="aclick('a40','s153')">4011eb</button><span id="a40" sline= "s153">	74 3a                	je     401227 &lt;Minsert+0x4e&gt;</span>
+<button onclick="aclick('a41','s158')">4011ed</button><span id="a41" sline= "s158">	39 7d 00             	cmp    %edi,0x0(%rbp)</span>
+<button onclick="aclick('a42','s158')">4011f0</button><span id="a42" sline= "s158">	7f 3c                	jg     40122e &lt;Minsert+0x55&gt;</span>
+<button onclick="aclick('a43','s163')">4011f2</button><span id="a43" sline= "s163">	bf 10 00 00 00       	mov    $0x10,%edi</span>
+<button onclick="aclick('a44','s163')">4011f7</button><span id="a44" sline= "s163">	e8 74 fe ff ff       	call   401070 &lt;malloc@plt&gt;</span>
+<button onclick="aclick('a45','s164')">4011fc</button><span id="a45" sline= "s164">	89 18                	mov    %ebx,(%rax)</span>
+<button onclick="aclick('a46','s165')">4011fe</button><span id="a46" sline= "s165 s166">	48 8b 55 08          	mov    0x8(%rbp),%rdx</span>
+<button onclick="aclick('a47','s167')">401202</button><span id="a47" sline= "s167">	48 85 d2             	test   %rdx,%rdx</span>
+<button onclick="aclick('a48','s167')">401205</button><span id="a48" sline= "s167">	74 14                	je     40121b &lt;Minsert+0x42&gt;</span>
+<button onclick="aclick('a49','s165')">401207</button><span id="a49" sline= "s165">	48 89 e9             	mov    %rbp,%rcx</span>
+<button onclick="aclick('a50','s169')">40120a</button><span id="a50" sline= "s169">	39 1a                	cmp    %ebx,(%rdx)</span>
+<button onclick="aclick('a51','s169')">40120c</button><span id="a51" sline= "s169">	7d 2c                	jge    40123a &lt;Minsert+0x61&gt;</span>
+<button onclick="aclick('a52','s175')">40120e</button><span id="a52" sline= "s175">	48 8b 49 08          	mov    0x8(%rcx),%rcx</span>
+<button onclick="aclick('a53','s176')">401212</button><span id="a53" sline= "s176">	48 8b 52 08          	mov    0x8(%rdx),%rdx</span>
+<button onclick="aclick('a54','s167')">401216</button><span id="a54" sline= "s167">	48 85 d2             	test   %rdx,%rdx</span>
+<button onclick="aclick('a55','s167')">401219</button><span id="a55" sline= "s167">	75 ef                	jne    40120a &lt;Minsert+0x31&gt;</span>
+<button onclick="aclick('a56','s178')">40121b</button><span id="a56" sline= "s178">	48 89 ee             	mov    %rbp,%rsi</span>
+<button onclick="aclick('a57','s178')">40121e</button><span id="a57" sline= "s178">	89 df                	mov    %ebx,%edi</span>
+<button onclick="aclick('a58','s178')">401220</button><span id="a58" sline= "s178">	e8 7e ff ff ff       	call   4011a3 &lt;Einsert&gt;</span>
+<button onclick="aclick('a59','s178')">401225</button><span id="a59" sline= "s178">	eb 0c                	jmp    401233 &lt;Minsert+0x5a&gt;</span>
+<button onclick="aclick('a60','s155')">401227</button><span id="a60" sline= "s155">	e8 4a ff ff ff       	call   401176 &lt;Binsert&gt;</span>
+<button onclick="aclick('a61','s156')">40122c</button><span id="a61" sline= "s156">	eb 05                	jmp    401233 &lt;Minsert+0x5a&gt;</span>
+<button onclick="aclick('a62','s160')">40122e</button><span id="a62" sline= "s160">	e8 43 ff ff ff       	call   401176 &lt;Binsert&gt;</span>
+<button onclick="aclick('a63','s161')">401233</button><span id="a63" sline= "s161 s179">	48 83 c4 08          	add    $0x8,%rsp</span>
+<button onclick="aclick('a64','s179')">401237</button><span id="a64" sline= "s179">	5b                   	pop    %rbx</span>
+<button onclick="aclick('a65','s179')">401238</button><span id="a65" sline= "s179">	5d                   	pop    %rbp</span>
+<button onclick="aclick('a66','s179')">401239</button><span id="a66" sline= "s179">	c3                   	ret    </span>
+<button onclick="aclick('a67','s171')">40123a</button><span id="a67" sline= "s171">	48 89 41 08          	mov    %rax,0x8(%rcx)</span>
+<button onclick="aclick('a68','s172')">40123e</button><span id="a68" sline= "s172">	48 89 50 08          	mov    %rdx,0x8(%rax)</span>
+<button onclick="aclick('a69','s173')">401242</button><span id="a69" sline= "s173">	eb ef                	jmp    401233 &lt;Minsert+0x5a&gt;</span>
+
+0000000000401244 &lt;Display&gt;:
+<button onclick="aclick('a70','s182')">401244</button><span id="a70" sline= "s182">	53                   	push   %rbx</span>
+<button onclick="aclick('a71','s182')">401245</button><span id="a71" sline= "s182">	48 89 fb             	mov    %rdi,%rbx</span>
+<button onclick="aclick('a72','s183')">401248</button><span id="a72" sline= "s183 s184">	48 85 ff             	test   %rdi,%rdi</span>
+<button onclick="aclick('a73','s184')">40124b</button><span id="a73" sline= "s184">	74 1a                	je     401267 &lt;Display+0x23&gt;</span>
+<button onclick="aclick('a74','s186')">40124d</button><span id="a74" sline= "s186">	8b 33                	mov    (%rbx),%esi</span>
+<button onclick="aclick('a75','s186')">40124f</button><span id="a75" sline= "s186">	bf 10 20 40 00       	mov    $0x402010,%edi</span>
+<button onclick="aclick('a76','s186')">401254</button><span id="a76" sline= "s186">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a77','s186')">401259</button><span id="a77" sline= "s186">	e8 02 fe ff ff       	call   401060 &lt;printf@plt&gt;</span>
+<button onclick="aclick('a78','s187')">40125e</button><span id="a78" sline= "s187">	48 8b 5b 08          	mov    0x8(%rbx),%rbx</span>
+<button onclick="aclick('a79','s184')">401262</button><span id="a79" sline= "s184">	48 85 db             	test   %rbx,%rbx</span>
+<button onclick="aclick('a80','s184')">401265</button><span id="a80" sline= "s184">	75 e6                	jne    40124d &lt;Display+0x9&gt;</span>
+<button onclick="aclick('a81','s189')">401267</button><span id="a81" sline= "s189">	bf 0a 00 00 00       	mov    $0xa,%edi</span>
+<button onclick="aclick('a82','s189')">40126c</button><span id="a82" sline= "s189">	e8 cf fd ff ff       	call   401040 &lt;putchar@plt&gt;</span>
+<button onclick="aclick('a83','s190')">401271</button><span id="a83" sline= "s190">	5b                   	pop    %rbx</span>
+<button onclick="aclick('a84','s190')">401272</button><span id="a84" sline= "s190">	c3                   	ret    </span>
+
+0000000000401273 &lt;Bdelete&gt;:
+<button onclick="aclick('a85','s193')">401273</button><span id="a85" sline= "s193">	48 83 ec 08          	sub    $0x8,%rsp</span>
+<button onclick="aclick('a86','s194')">401277</button><span id="a86" sline= "s194">	48 8b 3d e2 2d 00 00 	mov    0x2de2(%rip),%rdi        # 404060 &lt;head&gt;</span>
+<button onclick="aclick('a87','s195')">40127e</button><span id="a87" sline= "s195">	48 8b 47 08          	mov    0x8(%rdi),%rax</span>
+<button onclick="aclick('a88','s195')">401282</button><span id="a88" sline= "s195">	48 89 05 d7 2d 00 00 	mov    %rax,0x2dd7(%rip)        # 404060 &lt;head&gt;</span>
+<button onclick="aclick('a89','s196')">401289</button><span id="a89" sline= "s196">	e8 a2 fd ff ff       	call   401030 &lt;free@plt&gt;</span>
+<button onclick="aclick('a90','s197')">40128e</button><span id="a90" sline= "s197">	48 83 c4 08          	add    $0x8,%rsp</span>
+<button onclick="aclick('a91','s197')">401292</button><span id="a91" sline= "s197">	c3                   	ret    </span>
+
+0000000000401293 &lt;Edelete&gt;:
+<button onclick="aclick('a92','s200')">401293</button><span id="a92" sline= "s200">	48 83 ec 08          	sub    $0x8,%rsp</span>
+<button onclick="aclick('a93','s201')">401297</button><span id="a93" sline= "s201 s202">	48 8b 3d c2 2d 00 00 	mov    0x2dc2(%rip),%rdi        # 404060 &lt;head&gt;</span>
+<button onclick="aclick('a94','s203')">40129e</button><span id="a94" sline= "s203">	48 89 f8             	mov    %rdi,%rax</span>
+<button onclick="aclick('a95','s203')">4012a1</button><span id="a95" sline= "s203">	48 8b 7f 08          	mov    0x8(%rdi),%rdi</span>
+<button onclick="aclick('a96','s203')">4012a5</button><span id="a96" sline= "s203">	48 83 7f 08 00       	cmpq   $0x0,0x8(%rdi)</span>
+<button onclick="aclick('a97','s203')">4012aa</button><span id="a97" sline= "s203">	75 f2                	jne    40129e &lt;Edelete+0xb&gt;</span>
+<button onclick="aclick('a98','s205')">4012ac</button><span id="a98" sline= "s205 s206">	48 c7 40 08 00 00 00 	movq   $0x0,0x8(%rax)</span>
+<button onclick="aclick('a99','s206')">4012b3</button><span id="a99" sline= "s206">	00 </span>
+<button onclick="aclick('a100','s207')">4012b4</button><span id="a100" sline= "s207">	e8 77 fd ff ff       	call   401030 &lt;free@plt&gt;</span>
+<button onclick="aclick('a101','s208')">4012b9</button><span id="a101" sline= "s208">	48 83 c4 08          	add    $0x8,%rsp</span>
+<button onclick="aclick('a102','s208')">4012bd</button><span id="a102" sline= "s208">	c3                   	ret    </span>
+
+00000000004012be &lt;Mdelete&gt;:
+<button onclick="aclick('a103','s211')">4012be</button><span id="a103" sline= "s211">	48 83 ec 08          	sub    $0x8,%rsp</span>
+<button onclick="aclick('a104','s212')">4012c2</button><span id="a104" sline= "s212">	48 8b 0d 97 2d 00 00 	mov    0x2d97(%rip),%rcx        # 404060 &lt;head&gt;</span>
+<button onclick="aclick('a105','s212')">4012c9</button><span id="a105" sline= "s212">	39 39                	cmp    %edi,(%rcx)</span>
+<button onclick="aclick('a106','s212')">4012cb</button><span id="a106" sline= "s212">	74 22                	je     4012ef &lt;Mdelete+0x31&gt;</span>
+<button onclick="aclick('a107','s217')">4012cd</button><span id="a107" sline= "s217">	48 8b 41 08          	mov    0x8(%rcx),%rax</span>
+<button onclick="aclick('a108','s218')">4012d1</button><span id="a108" sline= "s218">	48 8b 50 08          	mov    0x8(%rax),%rdx</span>
+<button onclick="aclick('a109','s218')">4012d5</button><span id="a109" sline= "s218">	48 85 d2             	test   %rdx,%rdx</span>
+<button onclick="aclick('a110','s218')">4012d8</button><span id="a110" sline= "s218">	74 10                	je     4012ea &lt;Mdelete+0x2c&gt;</span>
+<button onclick="aclick('a111','s220')">4012da</button><span id="a111" sline= "s220">	39 38                	cmp    %edi,(%rax)</span>
+<button onclick="aclick('a112','s220')">4012dc</button><span id="a112" sline= "s220">	75 f7                	jne    4012d5 &lt;Mdelete+0x17&gt;</span>
+<button onclick="aclick('a113','s222')">4012de</button><span id="a113" sline= "s222">	48 89 51 08          	mov    %rdx,0x8(%rcx)</span>
+<button onclick="aclick('a114','s223')">4012e2</button><span id="a114" sline= "s223">	48 89 c7             	mov    %rax,%rdi</span>
+<button onclick="aclick('a115','s223')">4012e5</button><span id="a115" sline= "s223">	e8 46 fd ff ff       	call   401030 &lt;free@plt&gt;</span>
+<button onclick="aclick('a116','s224')">4012ea</button><span id="a116" sline= "s224 s227">	48 83 c4 08          	add    $0x8,%rsp</span>
+<button onclick="aclick('a117','s227')">4012ee</button><span id="a117" sline= "s227">	c3                   	ret    </span>
+<button onclick="aclick('a118','s214')">4012ef</button><span id="a118" sline= "s214">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a119','s214')">4012f4</button><span id="a119" sline= "s214">	e8 7a ff ff ff       	call   401273 &lt;Bdelete&gt;</span>
+<button onclick="aclick('a120','s215')">4012f9</button><span id="a120" sline= "s215">	eb ef                	jmp    4012ea &lt;Mdelete+0x2c&gt;</span>
+
+00000000004012fb &lt;main&gt;:
+<button onclick="aclick('a121','s38')">4012fb</button><span id="a121" sline= "s38">	48 83 ec 18          	sub    $0x18,%rsp</span>
+<button onclick="aclick('a122','s38')">4012ff</button><span id="a122" sline= "s38">	eb 2c                	jmp    40132d &lt;main+0x32&gt;</span>
+<button onclick="aclick('a123','s48')">401301</button><span id="a123" sline= "s48">	bf 18 20 40 00       	mov    $0x402018,%edi</span>
+<button onclick="aclick('a124','s48')">401306</button><span id="a124" sline= "s48">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a125','s48')">40130b</button><span id="a125" sline= "s48">	e8 50 fd ff ff       	call   401060 &lt;printf@plt&gt;</span>
+<button onclick="aclick('a126','s49')">401310</button><span id="a126" sline= "s49">	48 8d 74 24 0c       	lea    0xc(%rsp),%rsi</span>
+<button onclick="aclick('a127','s49')">401315</button><span id="a127" sline= "s49">	bf 15 20 40 00       	mov    $0x402015,%edi</span>
+<button onclick="aclick('a128','s49')">40131a</button><span id="a128" sline= "s49">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a129','s49')">40131f</button><span id="a129" sline= "s49">	e8 5c fd ff ff       	call   401080 &lt;__isoc99_scanf@plt&gt;</span>
+<button onclick="aclick('a130','s50')">401324</button><span id="a130" sline= "s50">	8b 7c 24 0c          	mov    0xc(%rsp),%edi</span>
+<button onclick="aclick('a131','s50')">401328</button><span id="a131" sline= "s50">	e8 49 fe ff ff       	call   401176 &lt;Binsert&gt;</span>
+<button onclick="aclick('a132','s51')">40132d</button><span id="a132" sline= "s51 s39 s41 s42">	bf 40 20 40 00       	mov    $0x402040,%edi</span>
+<button onclick="aclick('a133','s42')">401332</button><span id="a133" sline= "s42">	e8 19 fd ff ff       	call   401050 &lt;puts@plt&gt;</span>
+<button onclick="aclick('a134','s43')">401337</button><span id="a134" sline= "s43">	48 8d 74 24 08       	lea    0x8(%rsp),%rsi</span>
+<button onclick="aclick('a135','s43')">40133c</button><span id="a135" sline= "s43">	bf 15 20 40 00       	mov    $0x402015,%edi</span>
+<button onclick="aclick('a136','s43')">401341</button><span id="a136" sline= "s43">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a137','s43')">401346</button><span id="a137" sline= "s43">	e8 35 fd ff ff       	call   401080 &lt;__isoc99_scanf@plt&gt;</span>
+<button onclick="aclick('a138','s44')">40134b</button><span id="a138" sline= "s44">	83 7c 24 08 07       	cmpl   $0x7,0x8(%rsp)</span>
+<button onclick="aclick('a139','s44')">401350</button><span id="a139" sline= "s44">	77 db                	ja     40132d &lt;main+0x32&gt;</span>
+<button onclick="aclick('a140','s44')">401352</button><span id="a140" sline= "s44">	8b 44 24 08          	mov    0x8(%rsp),%eax</span>
+<button onclick="aclick('a141','s44')">401356</button><span id="a141" sline= "s44">	ff 24 c5 f0 20 40 00 	jmp    *0x4020f0(,%rax,8)</span>
+<button onclick="aclick('a142','s55')">40135d</button><span id="a142" sline= "s55">	bf 18 20 40 00       	mov    $0x402018,%edi</span>
+<button onclick="aclick('a143','s55')">401362</button><span id="a143" sline= "s55">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a144','s55')">401367</button><span id="a144" sline= "s55">	e8 f4 fc ff ff       	call   401060 &lt;printf@plt&gt;</span>
+<button onclick="aclick('a145','s56')">40136c</button><span id="a145" sline= "s56">	48 8d 74 24 0c       	lea    0xc(%rsp),%rsi</span>
+<button onclick="aclick('a146','s56')">401371</button><span id="a146" sline= "s56">	bf 15 20 40 00       	mov    $0x402015,%edi</span>
+<button onclick="aclick('a147','s56')">401376</button><span id="a147" sline= "s56">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a148','s56')">40137b</button><span id="a148" sline= "s56">	e8 00 fd ff ff       	call   401080 &lt;__isoc99_scanf@plt&gt;</span>
+<button onclick="aclick('a149','s57')">401380</button><span id="a149" sline= "s57">	48 8b 35 d9 2c 00 00 	mov    0x2cd9(%rip),%rsi        # 404060 &lt;head&gt;</span>
+<button onclick="aclick('a150','s57')">401387</button><span id="a150" sline= "s57">	8b 7c 24 0c          	mov    0xc(%rsp),%edi</span>
+<button onclick="aclick('a151','s57')">40138b</button><span id="a151" sline= "s57">	e8 13 fe ff ff       	call   4011a3 &lt;Einsert&gt;</span>
+<button onclick="aclick('a152','s58')">401390</button><span id="a152" sline= "s58">	eb 9b                	jmp    40132d &lt;main+0x32&gt;</span>
+<button onclick="aclick('a153','s62')">401392</button><span id="a153" sline= "s62">	bf 18 20 40 00       	mov    $0x402018,%edi</span>
+<button onclick="aclick('a154','s62')">401397</button><span id="a154" sline= "s62">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a155','s62')">40139c</button><span id="a155" sline= "s62">	e8 bf fc ff ff       	call   401060 &lt;printf@plt&gt;</span>
+<button onclick="aclick('a156','s63')">4013a1</button><span id="a156" sline= "s63">	48 8d 74 24 0c       	lea    0xc(%rsp),%rsi</span>
+<button onclick="aclick('a157','s63')">4013a6</button><span id="a157" sline= "s63">	bf 15 20 40 00       	mov    $0x402015,%edi</span>
+<button onclick="aclick('a158','s63')">4013ab</button><span id="a158" sline= "s63">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a159','s63')">4013b0</button><span id="a159" sline= "s63">	e8 cb fc ff ff       	call   401080 &lt;__isoc99_scanf@plt&gt;</span>
+<button onclick="aclick('a160','s64')">4013b5</button><span id="a160" sline= "s64">	8b 7c 24 0c          	mov    0xc(%rsp),%edi</span>
+<button onclick="aclick('a161','s64')">4013b9</button><span id="a161" sline= "s64">	e8 1b fe ff ff       	call   4011d9 &lt;Minsert&gt;</span>
+<button onclick="aclick('a162','s65')">4013be</button><span id="a162" sline= "s65">	e9 6a ff ff ff       	jmp    40132d &lt;main+0x32&gt;</span>
+<button onclick="aclick('a163','s69')">4013c3</button><span id="a163" sline= "s69">	bf 2b 20 40 00       	mov    $0x40202b,%edi</span>
+<button onclick="aclick('a164','s69')">4013c8</button><span id="a164" sline= "s69">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a165','s69')">4013cd</button><span id="a165" sline= "s69">	e8 8e fc ff ff       	call   401060 &lt;printf@plt&gt;</span>
+<button onclick="aclick('a166','s70')">4013d2</button><span id="a166" sline= "s70">	48 8d 74 24 0c       	lea    0xc(%rsp),%rsi</span>
+<button onclick="aclick('a167','s70')">4013d7</button><span id="a167" sline= "s70">	bf 15 20 40 00       	mov    $0x402015,%edi</span>
+<button onclick="aclick('a168','s70')">4013dc</button><span id="a168" sline= "s70">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a169','s70')">4013e1</button><span id="a169" sline= "s70">	e8 9a fc ff ff       	call   401080 &lt;__isoc99_scanf@plt&gt;</span>
+<button onclick="aclick('a170','s71')">4013e6</button><span id="a170" sline= "s71">	83 7c 24 0c 01       	cmpl   $0x1,0xc(%rsp)</span>
+<button onclick="aclick('a171','s71')">4013eb</button><span id="a171" sline= "s71">	74 11                	je     4013fe &lt;main+0x103&gt;</span>
+<button onclick="aclick('a172','s74')">4013ed</button><span id="a172" sline= "s74">	48 8b 3d 64 2c 00 00 	mov    0x2c64(%rip),%rdi        # 404058 &lt;head2&gt;</span>
+<button onclick="aclick('a173','s74')">4013f4</button><span id="a173" sline= "s74">	e8 4b fe ff ff       	call   401244 &lt;Display&gt;</span>
+<button onclick="aclick('a174','s74')">4013f9</button><span id="a174" sline= "s74">	e9 2f ff ff ff       	jmp    40132d &lt;main+0x32&gt;</span>
+<button onclick="aclick('a175','s72')">4013fe</button><span id="a175" sline= "s72">	48 8b 3d 5b 2c 00 00 	mov    0x2c5b(%rip),%rdi        # 404060 &lt;head&gt;</span>
+<button onclick="aclick('a176','s72')">401405</button><span id="a176" sline= "s72">	e8 3a fe ff ff       	call   401244 &lt;Display&gt;</span>
+<button onclick="aclick('a177','s72')">40140a</button><span id="a177" sline= "s72">	e9 1e ff ff ff       	jmp    40132d &lt;main+0x32&gt;</span>
+<button onclick="aclick('a178','s79')">40140f</button><span id="a178" sline= "s79">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a179','s79')">401414</button><span id="a179" sline= "s79">	e8 5a fe ff ff       	call   401273 &lt;Bdelete&gt;</span>
+<button onclick="aclick('a180','s80')">401419</button><span id="a180" sline= "s80">	e9 0f ff ff ff       	jmp    40132d &lt;main+0x32&gt;</span>
+<button onclick="aclick('a181','s84')">40141e</button><span id="a181" sline= "s84">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a182','s84')">401423</button><span id="a182" sline= "s84">	e8 6b fe ff ff       	call   401293 &lt;Edelete&gt;</span>
+<button onclick="aclick('a183','s85')">401428</button><span id="a183" sline= "s85">	e9 00 ff ff ff       	jmp    40132d &lt;main+0x32&gt;</span>
+<button onclick="aclick('a184','s89')">40142d</button><span id="a184" sline= "s89">	bf c8 20 40 00       	mov    $0x4020c8,%edi</span>
+<button onclick="aclick('a185','s89')">401432</button><span id="a185" sline= "s89">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a186','s89')">401437</button><span id="a186" sline= "s89">	e8 24 fc ff ff       	call   401060 &lt;printf@plt&gt;</span>
+<button onclick="aclick('a187','s90')">40143c</button><span id="a187" sline= "s90">	48 8d 74 24 0c       	lea    0xc(%rsp),%rsi</span>
+<button onclick="aclick('a188','s90')">401441</button><span id="a188" sline= "s90">	bf 15 20 40 00       	mov    $0x402015,%edi</span>
+<button onclick="aclick('a189','s90')">401446</button><span id="a189" sline= "s90">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a190','s90')">40144b</button><span id="a190" sline= "s90">	e8 30 fc ff ff       	call   401080 &lt;__isoc99_scanf@plt&gt;</span>
+<button onclick="aclick('a191','s91')">401450</button><span id="a191" sline= "s91">	8b 7c 24 0c          	mov    0xc(%rsp),%edi</span>
+<button onclick="aclick('a192','s91')">401454</button><span id="a192" sline= "s91">	e8 65 fe ff ff       	call   4012be &lt;Mdelete&gt;</span>
+<button onclick="aclick('a193','s92')">401459</button><span id="a193" sline= "s92 s39 s40">	e9 cf fe ff ff       	jmp    40132d &lt;main+0x32&gt;</span>
+
+000000000040145e &lt;DeleteLL&gt;:
+<button onclick="aclick('a194','s230')">40145e</button><span id="a194" sline= "s230">	53                   	push   %rbx</span>
+<button onclick="aclick('a195','s231')">40145f</button><span id="a195" sline= "s231">	48 8b 5f 08          	mov    0x8(%rdi),%rbx</span>
+<button onclick="aclick('a196','s232')">401463</button><span id="a196" sline= "s232">	48 85 db             	test   %rbx,%rbx</span>
+<button onclick="aclick('a197','s232')">401466</button><span id="a197" sline= "s232">	74 11                	je     401479 &lt;DeleteLL+0x1b&gt;</span>
+<button onclick="aclick('a198','s234')">401468</button><span id="a198" sline= "s234">	e8 c3 fb ff ff       	call   401030 &lt;free@plt&gt;</span>
+<button onclick="aclick('a199','s235')">40146d</button><span id="a199" sline= "s235 s236">	48 89 df             	mov    %rbx,%rdi</span>
+<button onclick="aclick('a200','s236')">401470</button><span id="a200" sline= "s236">	48 8b 5b 08          	mov    0x8(%rbx),%rbx</span>
+<button onclick="aclick('a201','s232')">401474</button><span id="a201" sline= "s232">	48 85 db             	test   %rbx,%rbx</span>
+<button onclick="aclick('a202','s232')">401477</button><span id="a202" sline= "s232">	75 ef                	jne    401468 &lt;DeleteLL+0xa&gt;</span>
+<button onclick="aclick('a203','s238')">401479</button><span id="a203" sline= "s238">	e8 b2 fb ff ff       	call   401030 &lt;free@plt&gt;</span>
+<button onclick="aclick('a204','s239')">40147e</button><span id="a204" sline= "s239 s240">	5b                   	pop    %rbx</span>
+<button onclick="aclick('a205','s240')">40147f</button><span id="a205" sline= "s240">	c3                   	ret    </span>
+
+0000000000401480 &lt;copy&gt;:
+<button onclick="aclick('a206','s243')">401480</button><span id="a206" sline= "s243">	53                   	push   %rbx</span>
+<button onclick="aclick('a207','s244')">401481</button><span id="a207" sline= "s244">	48 8b 3d d0 2b 00 00 	mov    0x2bd0(%rip),%rdi        # 404058 &lt;head2&gt;</span>
+<button onclick="aclick('a208','s244')">401488</button><span id="a208" sline= "s244">	e8 d1 ff ff ff       	call   40145e &lt;DeleteLL&gt;</span>
+<button onclick="aclick('a209','s245')">40148d</button><span id="a209" sline= "s245 s246">	48 8b 1d cc 2b 00 00 	mov    0x2bcc(%rip),%rbx        # 404060 &lt;head&gt;</span>
+<button onclick="aclick('a210','s247')">401494</button><span id="a210" sline= "s247 s248">	48 85 db             	test   %rbx,%rbx</span>
+<button onclick="aclick('a211','s248')">401497</button><span id="a211" sline= "s248">	74 10                	je     4014a9 &lt;copy+0x29&gt;</span>
+<button onclick="aclick('a212','s249')">401499</button><span id="a212" sline= "s249">	8b 3b                	mov    (%rbx),%edi</span>
+<button onclick="aclick('a213','s249')">40149b</button><span id="a213" sline= "s249">	48 8b 35 b6 2b 00 00 	mov    0x2bb6(%rip),%rsi        # 404058 &lt;head2&gt;</span>
+<button onclick="aclick('a214','s249')">4014a2</button><span id="a214" sline= "s249">	e8 fc fc ff ff       	call   4011a3 &lt;Einsert&gt;</span>
+<button onclick="aclick('a215','s248')">4014a7</button><span id="a215" sline= "s248">	eb f0                	jmp    401499 &lt;copy+0x19&gt;</span>
+<button onclick="aclick('a216','s250')">4014a9</button><span id="a216" sline= "s250">	5b                   	pop    %rbx</span>
+<button onclick="aclick('a217','s250')">4014aa</button><span id="a217" sline= "s250">	c3                   	ret    </span>
+
+00000000004014ab &lt;locate&gt;:
+<button onclick="aclick('a218','s253')">4014ab</button><span id="a218" sline= "s253 s254 s255 s256">	48 8b 57 08          	mov    0x8(%rdi),%rdx</span>
+<button onclick="aclick('a219','s257')">4014af</button><span id="a219" sline= "s257 s258">	85 f6                	test   %esi,%esi</span>
+<button onclick="aclick('a220','s258')">4014b1</button><span id="a220" sline= "s258">	75 05                	jne    4014b8 &lt;locate+0xd&gt;</span>
+<button onclick="aclick('a221','s258')">4014b3</button><span id="a221" sline= "s258">	48 85 d2             	test   %rdx,%rdx</span>
+<button onclick="aclick('a222','s258')">4014b6</button><span id="a222" sline= "s258">	74 15                	je     4014cd &lt;locate+0x22&gt;</span>
+<button onclick="aclick('a223','s257')">4014b8</button><span id="a223" sline= "s257">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a224','s260')">4014bd</button><span id="a224" sline= "s260">	48 8b 52 08          	mov    0x8(%rdx),%rdx</span>
+<button onclick="aclick('a225','s261')">4014c1</button><span id="a225" sline= "s261">	83 c0 01             	add    $0x1,%eax</span>
+<button onclick="aclick('a226','s258')">4014c4</button><span id="a226" sline= "s258">	39 c6                	cmp    %eax,%esi</span>
+<button onclick="aclick('a227','s258')">4014c6</button><span id="a227" sline= "s258">	75 f5                	jne    4014bd &lt;locate+0x12&gt;</span>
+<button onclick="aclick('a228','s258')">4014c8</button><span id="a228" sline= "s258">	48 85 d2             	test   %rdx,%rdx</span>
+<button onclick="aclick('a229','s258')">4014cb</button><span id="a229" sline= "s258">	75 f0                	jne    4014bd &lt;locate+0x12&gt;</span>
+<button onclick="aclick('a230','s263')">4014cd</button><span id="a230" sline= "s263 s264">	b8 00 00 00 00       	mov    $0x0,%eax</span>
+<button onclick="aclick('a231','s264')">4014d2</button><span id="a231" sline= "s264">	c3                   	ret    </span>
+
+
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>
