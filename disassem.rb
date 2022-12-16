@@ -98,39 +98,13 @@ add2sline.each do |key,value|
     add2sline[key] = value.uniq
 end
 
-=begin
-# print the mapping
-puts "Line to Address Mapping"
-sline2add.each do |key,value|
-    value_hex = value.map{|x| x.to_s(16)}
-    puts "#{key} => #{value_hex}"
-end
 
-puts "Address to Line Mapping"
-add2sline.each do |key,value|
-    puts "#{key.to_s(16)} => #{value}"
-end
-
-puts "Assembly line to address Mapping"
-aline2add.each do |key,value|
-    puts "#{key} => #{value.to_s(16)}"
-end
-
-puts "Address to Assembly Line Mapping"
-add2aline.each do |key,value|
-    puts "#{key.to_s(16)} => #{value}"
-end
-
-=end
-# write actual html code
-
-
-file = File.new("#{source_file}_disassem.html", "w+")
+file = File.new("#{object_file}_disassem.html", "w+")
 
 File.foreach(html_header_file) do |line|
     file.puts line
 end
-file.puts "<h1>#{source_file}</h1>"
+file.puts "<h1>#{object_file}</h1>"
 
 file.write <<-HTML
 <table width="100%">
