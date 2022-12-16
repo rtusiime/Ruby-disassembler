@@ -1,14 +1,9 @@
-object_file = ARGV[0]
-source_file = ARGV[1]
+source_file = "linked_list.c"
 dwarf_file = "llvmDump.txt"
 assem_file = "objDump.txt"
 html_header_file = "header.txt"
 
-#System command to compile c code, get drwaf table, get assembly code
-llvmDump = system("llvm-dwarfdump --debug-line '#{object_file}' > #{dwarf_file}" )
-objDump  = system("objdump -d '#{object_file}' >  #{assem_file}")
-
-#parse dwarf table to obtain mapping 
+# parse dwarf table to obtain mapping 
 sline2add = {}
 add2sline = {}
 start_add = Float::INFINITY
@@ -99,12 +94,38 @@ add2sline.each do |key,value|
 end
 
 
-file = File.new("#{object_file}_disassem.html", "w+")
+# print the mapping
+puts "Line to Address Mapping"
+sline2add.each do |key,value|
+    value_hex = value.map{|x| x.to_s(16)}
+    puts "#{key} => #{value_hex}"
+end
+
+puts "Address to Line Mapping"
+add2sline.each do |key,value|
+    puts "#{key.to_s(16)} => #{value}"
+end
+
+puts "Assembly line to address Mapping"
+aline2add.each do |key,value|
+    puts "#{key} => #{value.to_s(16)}"
+end
+
+puts "Address to Assembly Line Mapping"
+add2aline.each do |key,value|
+    puts "#{key.to_s(16)} => #{value}"
+end
+
+
+# write actual html code
+
+
+file = File.new("#{source_file}_disassem.html", "w+")
 
 File.foreach(html_header_file) do |line|
     file.puts line
 end
-file.puts "<h1>#{object_file}</h1>"
+file.puts "<h1>#{source_file}</h1>"
 
 file.write <<-HTML
 <table width="100%">
@@ -152,9 +173,10 @@ reach = false
 count = 1
 File.open(assem_file).each do |line|
 	case line
-	when /^[A-Fa-f0-9]+ <[A-Za-z0-9_.]+>:$/
+	when /[A-Fa-f0-9]+ <[a-zA-Z0-9_.]+>:/
 	    arr = line.split
         addr = arr[0].to_i(base=16)
+        # puts "#{addr.to_s(16)} =? #{start_add.to_s(16)}"
         # check start ?
         if(addr == start_add)
             reach = true
