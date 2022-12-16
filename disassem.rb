@@ -1,12 +1,12 @@
-source_file = ARGV[0]
+object_file = ARGV[0]
+source_file = ARGV[1]
 dwarf_file = "llvmDump.txt"
 assem_file = "objDump.txt"
 html_header_file = "header.txt"
 
 # System command to compile c code, get drwaf table, get assembly code
-wasGood = system( "gcc -g3 -O1 -o 'test' #{source_file} " )
-llvmDump = system("llvm-dwarfdump --debug-line 'test' > #{dwarf_file}" )
-objDump  = system("objdump -d 'test' >  #{assem_file}")
+llvmDump = system("llvm-dwarfdump --debug-line '#{object_file}' > #{dwarf_file}" )
+objDump  = system("objdump -d '#{object_file}'' >  #{assem_file}")
 
 # parse dwarf table to obtain mapping 
 sline2add = {}
